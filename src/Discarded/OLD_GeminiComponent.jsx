@@ -8,7 +8,7 @@ const GeminiComponent = () => {
   const [result, setResult] = useState("");
   const apiKey = "AIzaSyD95GqpWFRZZQ7nzMNXB21XkhqTiHzICaI"; // Replace with your actual API key
 
-  const generateContent = async () => {
+  const generateContent = async ({ onOutputChange }) => {
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
@@ -66,7 +66,11 @@ const GeminiComponent = () => {
       });
 
       const response = resultGemini.response;
-      setResult(response.text());
+      const responseText = response.text();
+      setResult(responseText);
+      if (onOutputChange) {
+        onOutputChange(responseText);
+      }
     } catch (error) {
       console.error("Error generating content:", error);
       setResult("Error generating content. Please check the console.");

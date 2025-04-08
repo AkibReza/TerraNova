@@ -1,12 +1,10 @@
 import { useState } from "react";
-import GeminiComponent from "./Components/Gemini/GeminiComponent";
-import RecommendationComponent from "./Components/RecommendationComponent";
+import TerraNova from "./Components/TerraNova";
 
 function App() {
   return (
     <>
-      <GeminiComponent />
-      <RecommendationComponent />
+      <TerraNova />
     </>
   );
 }
