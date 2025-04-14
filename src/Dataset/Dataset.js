@@ -51,7 +51,7 @@ const propertyData = [
     propertyType: "Townhouse",
     propertySize: 1850,
     numberOfBedrooms: 3,
-    numberOfBathrooms: 2.5,
+    numberOfBathrooms: 2,
     amenities: [
       "Community Pool",
       "Gated Community",
@@ -69,7 +69,7 @@ const propertyData = [
     propertyType: "Single Family",
     propertySize: 2800,
     numberOfBedrooms: 5,
-    numberOfBathrooms: 3.5,
+    numberOfBathrooms: 3,
     amenities: [
       "Swimming Pool",
       "Home Office",
@@ -231,6 +231,19 @@ const propertyData = [
     priceRange: "$450,000 - $500,000",
     propertyType: "Townhouse",
     propertySize: 1450,
+    numberOfBedrooms: 3,
+    numberOfBathrooms: 2,
+    amenities: ["Community Pool", "Playground", "Walking Trails", "Garage"],
+    location: "Pinewood",
+    otherDetails:
+      "End-unit townhome with extra windows and bright, open floor plan.",
+  },
+  {
+    id: 16,
+    price: 1000000,
+    priceRange: "$450,000 - $500,000",
+    propertyType: "Flat",
+    propertySize: 1700,
     numberOfBedrooms: 3,
     numberOfBathrooms: 2,
     amenities: ["Community Pool", "Playground", "Walking Trails", "Garage"],
