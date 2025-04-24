@@ -15,12 +15,12 @@ function App() {
       <Router>
         <Layout>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/insights" element={<InsightsAnalytics />} />
-            <Route path="/best-offers" element={<BestOffers />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/TerraNova/" element={<Home />} />
+            <Route path="/TerraNova/insights" element={<InsightsAnalytics />} />
+            <Route path="/TerraNova/best-offers" element={<BestOffers />} />
+            <Route path="/TerraNova/favorites" element={<Favorites />} />
+            <Route path="/TerraNova/contact" element={<Contact />} />
+            <Route path="/TerraNova/auth" element={<Auth />} />
           </Routes>
         </Layout>
       </Router>
