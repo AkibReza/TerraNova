@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { propertyData, getPropertyRecommendations } from "../Dataset/Dataset"; // Make sure the path is correct
+import { propertyData, getPropertyRecommendations } from "../dataset/Dataset"; // Make sure the path is correct
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";

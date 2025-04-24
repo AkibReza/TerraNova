@@ -1,4 +1,4 @@
-import { propertyData } from "../Dataset/Dataset";
+import { propertyData } from "../dataset/Dataset";
 
 /**
  * Calculate the Room Distance Score between user preferences and property
