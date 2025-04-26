@@ -11,11 +11,11 @@ const Navbar = () => {
 
   // Navigation links
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Insights & Analytics", path: "/insights" },
-    { name: "Best Offers", path: "/best-offers" },
-    { name: "Your Favorites", path: "/favorites" },
-    { name: "Contact Us", path: "/contact" },
+    { name: "Home", path: "/TerraNova/" },
+    { name: "Insights & Analytics", path: "/TerraNova/insights" },
+    { name: "Best Offers", path: "/TerraNova/best-offers" },
+    { name: "Your Favorites", path: "/TerraNova/favorites" },
+    { name: "Contact Us", path: "/TerraNova/contact" },
   ];
 
   // Handle scroll effect
@@ -49,7 +49,7 @@ const Navbar = () => {
             transition={{ duration: 0.5 }}
             className="flex-shrink-0"
           >
-            <Link to="/" className="flex items-center">
+            <Link to="/TerraNova/" className="flex items-center">
               <span className="text-2xl font-bold text-blue-600">
                 TerraNova
               </span>
@@ -100,7 +100,7 @@ const Navbar = () => {
               </div>
             ) : (
               <Link
-                to="/auth"
+                to="/TerraNova/auth"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Login / Sign Up
@@ -192,7 +192,7 @@ const Navbar = () => {
             </div>
           ) : (
             <Link
-              to="/auth"
+              to="/TerraNova/auth"
               className="block w-full mt-4 px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white text-center hover:bg-blue-700"
               onClick={() => setIsMobileMenuOpen(false)}
             >

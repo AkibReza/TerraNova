@@ -4,7 +4,7 @@ const propertyData = [
   {
     id: 1,
     price: 18000000,
-    propertyType: "apartment",
+    propertyType: "Apartment",
     propertySize: 1650, // sq ft
     numberOfBedrooms: 3,
     numberOfBathrooms: 2,
@@ -17,8 +17,8 @@ const propertyData = [
   {
     id: 2,
     price: 65000,
-    propertyType: "apartment",
-    propertySize: 1200, // sq ft
+    propertyType: "Apartment",
+    propertySize: 500, // sq ft
     numberOfBedrooms: 2,
     numberOfBathrooms: 2,
     amenities: ["Balcony", "Parking", "Elevator", "Security"],
@@ -26,201 +26,73 @@ const propertyData = [
     otherDetails: "Modern apartment in a prime location.",
     transactionType: "Rent",
   },
-  {
-    id: 3,
-    price: 35000000,
-    propertyType: "House",
-    propertySize: 2800, // sq ft
-    numberOfBedrooms: 5,
-    numberOfBathrooms: 4,
-    amenities: ["Large Garden", "Garage", "Swimming Pool", "Home Office"],
-    location: "Baridhara Diplomatic Zone",
-    otherDetails: "Spacious family home in a prestigious area.",
-    transactionType: "Sale",
-  },
-  {
-    id: 4,
-    price: 120000,
-    propertyType: "apartment",
-    propertySize: 1850, // sq ft
-    numberOfBedrooms: 3,
-    numberOfBathrooms: 3,
-    amenities: [
-      "Community Hall",
-      "Children's Play Area",
-      "Power Backup",
-      "Security",
-    ],
-    location: "Dhanmondi",
-    otherDetails:
-      "Well-maintained apartment complex with family-friendly amenities.",
-    transactionType: "Rent",
-  },
-  {
-    id: 5,
-    price: 12000000,
-    propertyType: "apartment",
-    propertySize: 1100, // sq ft
-    numberOfBedrooms: 2,
-    numberOfBathrooms: 2,
-    amenities: ["Parking", "Elevator", "Security"],
-    location: "Uttara",
-    otherDetails: "Cozy apartment, ideal for small families or couples.",
-    transactionType: "Sale",
-  },
-  {
-    id: 6,
-    price: 45000,
-    propertyType: "apartment",
-    propertySize: 950, // sq ft
-    numberOfBedrooms: 3,
-    numberOfBathrooms: 3,
-    amenities: ["Balcony", "Parking", "Security"],
-    location: "Mirpur",
-    otherDetails: "Affordable apartment with essential amenities.",
-    transactionType: "Rent",
-  },
-  {
-    id: 7,
-    price: 25000000,
-    propertyType: "Duplex",
-    propertySize: 2200, // sq ft
-    numberOfBedrooms: 4,
-    numberOfBathrooms: 3,
-    amenities: ["Garden", "Parking", "Security"],
-    location: "Bashundhara R/A",
-    otherDetails: "Modern duplex house with ample space.",
-    transactionType: "Sale",
-  },
-  {
-    id: 8,
-    price: 80000,
-    propertyType: "apartment",
-    propertySize: 1500, // sq ft
-    numberOfBedrooms: 3,
-    numberOfBathrooms: 2,
-    amenities: ["Swimming Pool", "Gymnasium", "Security", "Parking"],
-    location: "Mohakhali",
-    otherDetails: "Spacious apartment with good facilities.",
-    transactionType: "Rent",
-  },
-  {
-    id: 9,
-    price: 9500000,
-    propertyType: "apartment",
-    propertySize: 1300, // sq ft
-    numberOfBedrooms: 3,
-    numberOfBathrooms: 2,
-    amenities: ["Parking", "Elevator", "Security"],
-    location: "Eskaton",
-    otherDetails: "Comfortable apartment in a central location.",
-    transactionType: "Sale",
-  },
-  {
-    id: 10,
-    price: 55000,
-    propertyType: "apartment",
-    propertySize: 1000, // sq ft
-    numberOfBedrooms: 2,
-    numberOfBathrooms: 2,
-    amenities: ["Balcony", "Parking", "Security"],
-    location: "Lalmatia",
-    otherDetails: "Cozy apartment in a quiet neighborhood.",
-    transactionType: "Rent",
-  },
-  {
-    id: 11,
-    price: 30000000,
-    propertyType: "House",
-    propertySize: 2500, // sq ft
-    numberOfBedrooms: 4,
-    numberOfBathrooms: 3,
-    amenities: ["Garden", "Garage", "Security"],
-    location: "Purbachal",
-    otherDetails: "Newly built house in a developing area.",
-    transactionType: "Sale",
-  },
-  {
-    id: 12,
-    price: 110000,
-    propertyType: "apartment",
-    propertySize: 1700, // sq ft
-    numberOfBedrooms: 3,
-    numberOfBathrooms: 2,
-    amenities: ["Swimming Pool", "Gymnasium", "Parking", "Security"],
-    location: "Baridhara",
-    otherDetails: "Luxury apartment with modern amenities.",
-    transactionType: "Rent",
-  },
-  {
-    id: 13,
-    price: 7000000,
-    propertyType: "apartment",
-    propertySize: 1200, // sq ft
-    numberOfBedrooms: 2,
-    numberOfBathrooms: 2,
-    amenities: ["Parking", "Elevator", "Security"],
-    location: "Shantinagar",
-    otherDetails: "Well-located apartment.",
-    transactionType: "Sale",
-  },
-  {
-    id: 14,
-    price: 60000,
-    propertyType: "apartment",
-    propertySize: 900, // sq ft
-    numberOfBedrooms: 1,
-    numberOfBathrooms: 1,
-    amenities: ["Balcony", "Parking", "Security"],
-    location: "Rampura",
-    otherDetails: "Compact apartment.",
-    transactionType: "Rent",
-  },
-  {
-    id: 15,
-    price: 20000000,
-    propertyType: "Duplex",
-    propertySize: 2000, // sq ft
-    numberOfBedrooms: 3,
-    numberOfBathrooms: 2,
-    amenities: ["Garden", "Parking", "Security"],
-    location: "Aftab Nagar",
-    otherDetails: "Stylish duplex house.",
-    transactionType: "Sale",
-  },
 ];
 
-/**
- * Calculate the Room Distance Score between user preferences and property
- * @param {Object} userPreference - User's preferences from the prompt
- * @param {Object} property - Property from the dataset
- * @returns {number} - Normalized distance score (0-1, where 0 is perfect match)
- */
+// Updated calculateRoomDistanceScore function
+
+// Updated calculateRoomDistanceScore function with improved price scoring
 function calculateRoomDistanceScore(userPreference, property, ranges) {
   let totalDistance = 0;
   let featuresConsidered = 0;
-  const has = (key) =>
-    userPreference[key] !== undefined && userPreference[key] !== null;
 
-  // Numerical features
+  // Improved has() function that checks for null, undefined, and empty values
+  const has = (key) => {
+    // Check if the key exists and has a meaningful value
+    if (userPreference[key] === undefined || userPreference[key] === null) {
+      return false;
+    }
+
+    // For arrays, check if they're not empty
+    if (Array.isArray(userPreference[key])) {
+      return userPreference[key].length > 0;
+    }
+
+    // For strings, check if they're not empty after trimming
+    if (typeof userPreference[key] === "string") {
+      return userPreference[key].trim() !== "";
+    }
+
+    // For numbers, make sure they're valid numbers
+    if (typeof userPreference[key] === "number") {
+      return !isNaN(userPreference[key]);
+    }
+
+    return true;
+  };
+
+  // Improved Price Scoring - use percentage-based difference
   if (has("price")) {
     const userPrice = parseInt(
       String(userPreference.price).replace(/,/g, ""),
       10
     );
-    const diff = Math.abs(userPrice - property.price);
-    const norm = ranges.priceRange ? diff / ranges.priceRange : 0;
-    totalDistance += norm;
+    const propertyPrice = property.price;
+
+    // Calculate percentage difference relative to the user's price
+    // This makes the same absolute difference more significant for lower prices
+    const percentageDiff = Math.abs(userPrice - propertyPrice) / userPrice;
+
+    // Apply a scaling factor to convert percentage to a reasonable score
+    // This can be tuned based on your preferences
+    const MAX_ACCEPTABLE_PERCENT_DIFF = 0.3; // 30% difference
+    const priceScore = Math.min(
+      percentageDiff / MAX_ACCEPTABLE_PERCENT_DIFF,
+      1
+    );
+
+    totalDistance += priceScore;
     featuresConsidered++;
   }
 
-  // Property Type
+  // Property Type (Categorical)
   if (has("propertyType")) {
     const userType = (userPreference.propertyType || "").toLowerCase();
     const propType = (property.propertyType || "").toLowerCase();
     totalDistance += userType === propType ? 0 : 1;
+    featuresConsidered++;
   }
 
+  // Property Size
   if (has("propertySize") || has("size")) {
     const userSize = userPreference.propertySize ?? userPreference.size;
     const diff = Math.abs(userSize - property.propertySize);
@@ -229,6 +101,7 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     featuresConsidered++;
   }
 
+  // Bedrooms
   if (has("numberOfBedrooms")) {
     const diff = Math.abs(
       userPreference.numberOfBedrooms - property.numberOfBedrooms
@@ -238,6 +111,7 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     featuresConsidered++;
   }
 
+  // Bathrooms
   if (has("numberOfBathrooms")) {
     const diff = Math.abs(
       userPreference.numberOfBathrooms - property.numberOfBathrooms
@@ -247,26 +121,27 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     featuresConsidered++;
   }
 
-  // Categorical features
-  if (has("propertyType")) {
-    totalDistance +=
-      userPreference.propertyType === property.propertyType ? 0 : 1;
-    featuresConsidered++;
-  }
-
+  // Location (Categorical)
   if (has("location")) {
-    totalDistance += userPreference.location === property.location ? 0 : 1;
+    // Only consider location if it's not an empty string
+    const userLocation = (userPreference.location || "").toLowerCase().trim();
+    const propLocation = (property.location || "").toLowerCase().trim();
+    totalDistance += userLocation === propLocation ? 0 : 1;
     featuresConsidered++;
   }
 
+  // Transaction Type (Categorical)
   if (has("transactionType")) {
-    totalDistance +=
-      userPreference.transactionType === property.transactionType ? 0 : 1;
+    const userTrans = (userPreference.transactionType || "")
+      .toLowerCase()
+      .trim();
+    const propTrans = (property.transactionType || "").toLowerCase().trim();
+    totalDistance += userTrans === propTrans ? 0 : 1;
     featuresConsidered++;
   }
 
   // Amenities (Jaccard Distance)
-  if (has("amenities") && Array.isArray(userPreference.amenities)) {
+  if (has("amenities")) {
     const userAmen = new Set(userPreference.amenities);
     const propAmen = new Set(property.amenities);
     const intersection = new Set([...userAmen].filter((x) => propAmen.has(x)));
@@ -275,8 +150,10 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     featuresConsidered++;
   }
 
+  // Return the normalized distance score
   return featuresConsidered ? totalDistance / featuresConsidered : 0;
 }
+
 function findKNearestNeighbors(userPreference, properties, k = 3) {
   // Calculate feature ranges
   const prices = properties.map((p) => p.price);
@@ -329,7 +206,6 @@ function getPropertyRecommendations(userPreference) {
 }
 
 // Export functions for use in your application
-// Replace the current module.exports with:
 export {
   propertyData,
   calculateRoomDistanceScore,
@@ -337,5 +213,3 @@ export {
   calculateMatchPercentage,
   getPropertyRecommendations,
 };
-
-/* I want a 3 bedroom and 3 bathroom house for rent in Mirpur. The rent shouldn't be more than 50,000 taka. Balcony, Elevator, Security Guard is required.  Although I don't have a car yet, a parking space would be great.  */

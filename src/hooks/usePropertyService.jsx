@@ -25,32 +25,84 @@ export const usePropertyService = () => {
       const parsedData = JSON.parse(jsonText.trim());
 
       // Convert property names to match dataset expectations
-      return {
-        price: parsedData.price ? parseInt(parsedData.price) : null,
-        propertyType: parsedData.propertyType || null,
-        propertySize: parsedData.propertySize
-          ? parseFloat(parsedData.propertySize)
-          : null,
-        numberOfBedrooms: parsedData.numberOfBedrooms
-          ? parseInt(parsedData.numberOfBedrooms)
-          : null,
-        numberOfBathrooms: parsedData.numberOfBathrooms
-          ? parseInt(parsedData.numberOfBathrooms)
-          : null,
-        amenities: Array.isArray(parsedData.amenities)
-          ? parsedData.amenities
-          : [],
-        location: parsedData.location || null,
-        otherDetails: parsedData.otherDetails || null,
-        transactionType: parsedData.transactionType || null,
-      };
+      // Only include values that are explicitly provided and meaningful
+      const result = {};
+
+      // Only add properties that have meaningful values
+      if (parsedData.price !== null && parsedData.price !== undefined) {
+        result.price = parseInt(parsedData.price);
+      }
+
+      if (
+        parsedData.propertyType !== null &&
+        parsedData.propertyType !== undefined &&
+        parsedData.propertyType.trim() !== ""
+      ) {
+        result.propertyType = parsedData.propertyType;
+      }
+
+      if (
+        parsedData.propertySize !== null &&
+        parsedData.propertySize !== undefined
+      ) {
+        result.propertySize = parseFloat(parsedData.propertySize);
+      }
+
+      if (
+        parsedData.numberOfBedrooms !== null &&
+        parsedData.numberOfBedrooms !== undefined
+      ) {
+        result.numberOfBedrooms = parseInt(parsedData.numberOfBedrooms);
+      }
+
+      if (
+        parsedData.numberOfBathrooms !== null &&
+        parsedData.numberOfBathrooms !== undefined
+      ) {
+        result.numberOfBathrooms = parseInt(parsedData.numberOfBathrooms);
+      }
+
+      if (
+        Array.isArray(parsedData.amenities) &&
+        parsedData.amenities.length > 0
+      ) {
+        result.amenities = parsedData.amenities;
+      }
+
+      if (
+        parsedData.location !== null &&
+        parsedData.location !== undefined &&
+        parsedData.location.trim() !== ""
+      ) {
+        result.location = parsedData.location;
+      }
+
+      if (
+        parsedData.otherDetails !== null &&
+        parsedData.otherDetails !== undefined &&
+        parsedData.otherDetails.trim() !== ""
+      ) {
+        result.otherDetails = parsedData.otherDetails;
+      }
+
+      if (
+        parsedData.transactionType !== null &&
+        parsedData.transactionType !== undefined
+      ) {
+        const transType = parsedData.transactionType.toLowerCase();
+        if (transType === "rent" || transType === "sale") {
+          result.transactionType =
+            transType.charAt(0).toUpperCase() +
+            transType.slice(1).toLowerCase();
+        }
+      }
+
+      return result;
     } catch (error) {
       console.error("Error parsing Gemini output:", error);
-      setError("Failed to parse AI response. Please try again.");
       return null;
     }
   };
-
   // Process user input and get recommendations
   const processUserInput = async (userInput) => {
     setIsProcessing(true);
@@ -92,27 +144,31 @@ export const usePropertyService = () => {
         },
       ];
 
-      const fullPrompt = `Extract the following information from the user's natural language description of their desired property. If a field is not explicitly mentioned, leave it as null, unless it is a detail that falls under 'OtherDetails'. If price is mentioned vaguely such as "around" a specific number then use that exact number. Remember price MUST be a integer value. 
+      const fullPrompt = `Extract the following information from the user's natural language description of their desired property. 
 
-Also detect if the user is looking for a property for rent or for sale and set the transactionType field accordingly.
-
-Return the result as a JSON object with the following structure:
-
-{
-  "price": "integer or null",
-  "propertyType": "string or null",
-  "propertySize": "decimal or null",
-  "numberOfBedrooms": "integer or null",
-  "numberOfBathrooms": "integer or null",
-  "amenities": "array of strings or null",
-  "location": "string or null",
-  "otherDetails": "string or null",
-  "transactionType": "Rent or Sale"
-}
+      IMPORTANT: Only extract information that is EXPLICITLY mentioned. If a field is not mentioned, do NOT include that field in the JSON response at all.
       
-User's Description: ${userInput}
+      For example:
+      - If the user only says "Banani", then the JSON should only have {"location": "Banani"} and no other fields.
+      - If they mention "3 bedroom apartment", include only "propertyType" and "numberOfBedrooms".
       
-Output:`;
+      Return the result as a JSON object with ONLY the mentioned fields:
+      
+      {
+        "price": [only if mentioned - integer],
+        "propertyType": [only if mentioned - string],
+        "propertySize": [only if mentioned - decimal],
+        "numberOfBedrooms": [only if mentioned - integer],
+        "numberOfBathrooms": [only if mentioned - integer],
+        "amenities": [only if mentioned - array of strings],
+        "location": [only if mentioned - string],
+        "otherDetails": [only if mentioned - string],
+        "transactionType": [only if mentioned - "Rent" or "Sale"]
+      }
+            
+      User's Description: ${userInput}
+            
+      Output:`;
 
       const parts = [{ text: fullPrompt }];
       const resultGemini = await model.generateContent({

@@ -24,7 +24,7 @@ const AuthForm = ({ isLogin }) => {
       } else {
         await signup(email, password, displayName);
       }
-      navigate("/");
+      navigate("/TerraNova/");
     } catch (err) {
       setError(err.message);
     } finally {
