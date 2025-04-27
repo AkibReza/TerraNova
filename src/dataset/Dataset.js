@@ -3,7 +3,7 @@
 const propertyData = [
   {
     id: 1,
-    price: 18000000,
+    price: 90000,
     propertyType: "Apartment",
     propertySize: 1650, // sq ft
     numberOfBedrooms: 3,
@@ -12,7 +12,7 @@ const propertyData = [
     location: "Gulshan 2",
     otherDetails:
       "Luxury apartment with panoramic city views and high-end finishes.",
-    transactionType: "Sale",
+    transactionType: "Rent",
   },
   {
     id: 2,
@@ -24,6 +24,18 @@ const propertyData = [
     amenities: ["Balcony", "Parking", "Elevator", "Security"],
     location: "Banani",
     otherDetails: "Modern apartment in a prime location.",
+    transactionType: "Rent",
+  },
+  {
+    id: 3,
+    price: 50000,
+    propertyType: "Apartment",
+    propertySize: 1100, // sq ft
+    numberOfBedrooms: 2,
+    numberOfBathrooms: 2,
+    amenities: ["Parking", "Elevator", "Security"],
+    location: "Uttara",
+    otherDetails: "Cozy apartment, ideal for small families or couples.",
     transactionType: "Rent",
   },
 ];
