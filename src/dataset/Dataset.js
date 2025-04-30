@@ -9,7 +9,7 @@ const propertyData = [
     numberOfBedrooms: 3,
     numberOfBathrooms: 2,
     amenities: ["Swimming Pool", "Gymnasium", "24/7 Security", "Parking"],
-    location: "Gulshan 2",
+    location: "Mohakhali",
     otherDetails:
       "Luxury apartment with panoramic city views and high-end finishes.",
     transactionType: "Rent",
@@ -46,6 +46,7 @@ const propertyData = [
 function calculateRoomDistanceScore(userPreference, property, ranges) {
   let totalDistance = 0;
   let featuresConsidered = 0;
+  let featureWeights = {};
 
   // Improved has() function that checks for null, undefined, and empty values
   const has = (key) => {
@@ -72,6 +73,18 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     return true;
   };
 
+  // Define weights for different features - adjust as needed
+  featureWeights = {
+    price: 1.5, // Price is very important
+    propertyType: 1.2, // Property type is quite important
+    location: 1.3, // Location is very important
+    numberOfBedrooms: 1.2, // Bedrooms are quite important
+    numberOfBathrooms: 1, // Standard weight
+    propertySize: 1, // Standard weight
+    transactionType: 1.5, // Very important
+    amenities: 0.8, // Slightly less important
+  };
+
   // Improved Price Scoring - use percentage-based difference
   if (has("price")) {
     const userPrice = parseInt(
@@ -92,16 +105,17 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
       1
     );
 
-    totalDistance += priceScore;
-    featuresConsidered++;
+    totalDistance += priceScore * featureWeights.price;
+    featuresConsidered += featureWeights.price;
   }
 
   // Property Type (Categorical)
   if (has("propertyType")) {
     const userType = (userPreference.propertyType || "").toLowerCase();
     const propType = (property.propertyType || "").toLowerCase();
-    totalDistance += userType === propType ? 0 : 1;
-    featuresConsidered++;
+    totalDistance +=
+      (userType === propType ? 0 : 1) * featureWeights.propertyType;
+    featuresConsidered += featureWeights.propertyType;
   }
 
   // Property Size
@@ -109,8 +123,8 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     const userSize = userPreference.propertySize ?? userPreference.size;
     const diff = Math.abs(userSize - property.propertySize);
     const norm = ranges.sizeRange ? diff / ranges.sizeRange : 0;
-    totalDistance += norm;
-    featuresConsidered++;
+    totalDistance += norm * featureWeights.propertySize;
+    featuresConsidered += featureWeights.propertySize;
   }
 
   // Bedrooms
@@ -119,8 +133,8 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
       userPreference.numberOfBedrooms - property.numberOfBedrooms
     );
     const norm = ranges.bedroomRange ? diff / ranges.bedroomRange : 0;
-    totalDistance += norm;
-    featuresConsidered++;
+    totalDistance += norm * featureWeights.numberOfBedrooms;
+    featuresConsidered += featureWeights.numberOfBedrooms;
   }
 
   // Bathrooms
@@ -129,17 +143,27 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
       userPreference.numberOfBathrooms - property.numberOfBathrooms
     );
     const norm = ranges.bathroomRange ? diff / ranges.bathroomRange : 0;
-    totalDistance += norm;
-    featuresConsidered++;
+    totalDistance += norm * featureWeights.numberOfBathrooms;
+    featuresConsidered += featureWeights.numberOfBathrooms;
   }
 
-  // Location (Categorical)
+  // Location with proximity scoring
   if (has("location")) {
-    // Only consider location if it's not an empty string
-    const userLocation = (userPreference.location || "").toLowerCase().trim();
-    const propLocation = (property.location || "").toLowerCase().trim();
-    totalDistance += userLocation === propLocation ? 0 : 1;
-    featuresConsidered++;
+    // Get the location proximity score (0-1 where 1 is perfect match)
+    const userLocation = userPreference.location.trim();
+    const propLocation = property.location.trim();
+
+    // The proximityScore is already between 0-1 where 1 is perfect match and 0 is completely different
+    const proximityScore = getLocationProximityScore(
+      userLocation,
+      propLocation
+    );
+
+    // Convert to a distance (0 is perfect match, 1 is completely different)
+    const locationDistance = 1 - proximityScore;
+
+    totalDistance += locationDistance * featureWeights.location;
+    featuresConsidered += featureWeights.location;
   }
 
   // Transaction Type (Categorical)
@@ -148,8 +172,9 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
       .toLowerCase()
       .trim();
     const propTrans = (property.transactionType || "").toLowerCase().trim();
-    totalDistance += userTrans === propTrans ? 0 : 1;
-    featuresConsidered++;
+    totalDistance +=
+      (userTrans === propTrans ? 0 : 1) * featureWeights.transactionType;
+    featuresConsidered += featureWeights.transactionType;
   }
 
   // Amenities (Jaccard Distance)
@@ -158,8 +183,9 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     const propAmen = new Set(property.amenities);
     const intersection = new Set([...userAmen].filter((x) => propAmen.has(x)));
     const union = new Set([...userAmen, ...propAmen]);
-    totalDistance += 1 - (intersection.size / union.size || 0);
-    featuresConsidered++;
+    totalDistance +=
+      (1 - (intersection.size / union.size || 0)) * featureWeights.amenities;
+    featuresConsidered += featureWeights.amenities;
   }
 
   // Return the normalized distance score
@@ -202,15 +228,34 @@ function getPropertyRecommendations(userPreference) {
   // Find k nearest neighbors
   const nearestNeighbors = findKNearestNeighbors(
     userPreference,
-    propertyData,
+    originalPropertyData,
     5
   );
 
   // Calculate match percentages
   const recommendations = nearestNeighbors.map((property) => {
+    // Add detailed match explanation if location is part of the criteria
+    let locationMatchDescription = "";
+    if (userPreference.location && property.location) {
+      const proximityScore = getLocationProximityScore(
+        userPreference.location,
+        property.location
+      );
+      if (proximityScore === 1.0) {
+        locationMatchDescription = "Exact location match";
+      } else if (proximityScore >= 0.7) {
+        locationMatchDescription = "In adjacent area";
+      } else if (proximityScore >= 0.4) {
+        locationMatchDescription = "In nearby area";
+      } else {
+        locationMatchDescription = "In different area";
+      }
+    }
+
     return {
       ...property,
       matchPercentage: calculateMatchPercentage(property.roomDistanceScore),
+      locationMatchDescription: locationMatchDescription,
     };
   });
 
@@ -219,7 +264,6 @@ function getPropertyRecommendations(userPreference) {
 
 // Export functions for use in your application
 export {
-  propertyData,
   calculateRoomDistanceScore,
   findKNearestNeighbors,
   calculateMatchPercentage,
