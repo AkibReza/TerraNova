@@ -10,7 +10,7 @@ const propertyData = [
     propertySize: 1650, // sq ft
     numberOfBedrooms: 3,
     numberOfBathrooms: 2,
-    amenities: ["Swimming Pool", "Gymnasium", "24/7 Security", "Parking"],
+    amenities: ["Swimming Pool", "Gymnasium", "Security", "Parking"],
     location: "Mohakhali",
     otherDetails:
       "Luxury apartment with panoramic city views and high-end finishes.",
@@ -237,7 +237,8 @@ function findKNearestNeighbors(userPreference, properties, k = 3) {
 }
 
 function calculateMatchPercentage(roomDistanceScore) {
-  return Math.round((1 - roomDistanceScore) * 100);
+  // Ensure the final percentage is between 0 and 100
+  return Math.max(0, Math.min(100, Math.round((1 - roomDistanceScore) * 100)));
 }
 
 function getPropertyRecommendations(userPreference) {

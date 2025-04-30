@@ -124,7 +124,8 @@ function findKNearestNeighbors(userPreference, properties, k = 5) {
  * Calculate match percentage from room distance score
  */
 function calculateMatchPercentage(roomDistanceScore) {
-  return Math.round((1 - roomDistanceScore) * 100);
+  // Ensure the final percentage is between 0 and 100
+  return Math.max(0, Math.min(100, Math.round((1 - roomDistanceScore) * 100)));
 }
 
 /**

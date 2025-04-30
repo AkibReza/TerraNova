@@ -75,7 +75,7 @@ const Favorites = () => {
         },
       ]);
       setLoading(false);
-    }, 1000);
+    }, 0);
   }, []);
 
   const formatPrice = (price, category) => {

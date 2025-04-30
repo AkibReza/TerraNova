@@ -89,7 +89,7 @@ const InsightsAnalytics = () => {
       };
       setData(dummyData);
       setLoading(false);
-    }, 1500);
+    }, 0);
   }, []);
 
   useEffect(() => {

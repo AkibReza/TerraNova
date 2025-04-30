@@ -58,7 +58,7 @@ const BestOffers = () => {
         },
       ]);
       setLoading(false);
-    }, 1000);
+    }, 0);
   }, []);
 
   const formatPrice = (price) => {
