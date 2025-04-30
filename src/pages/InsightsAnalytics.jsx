@@ -40,51 +40,52 @@ const InsightsAnalytics = () => {
           recommendationsChange: 21.4,
         },
         marketTrends: [
-          { month: "Jan", price: 320 },
-          { month: "Feb", price: 350 },
-          { month: "Mar", price: 340 },
-          { month: "Apr", price: 360 },
-          { month: "May", price: 375 },
-          { month: "Jun", price: 390 },
-          { month: "Jul", price: 400 },
-          { month: "Aug", price: 410 },
-          { month: "Sep", price: 405 },
-          { month: "Oct", price: 415 },
-          { month: "Nov", price: 425 },
-          { month: "Dec", price: 430 },
+
+          { month: "Jan", price: 80 },
+          { month: "Feb", price: 85 },
+          { month: "Mar", price: 82 },
+          { month: "Apr", price: 88 },
+          { month: "May", price: 90 },
+          { month: "Jun", price: 95 },
+          { month: "Jul", price: 98 },
+          { month: "Aug", price: 100 },
+          { month: "Sep", price: 97 },
+          { month: "Oct", price: 102 },
+          { month: "Nov", price: 105 },
+          { month: "Dec", price: 108 },
         ],
         priceDistribution: [
-          { range: "$0-200k", count: 12 },
-          { range: "$200k-400k", count: 45 },
-          { range: "$400k-600k", count: 32 },
-          { range: "$600k-800k", count: 18 },
-          { range: "$800k-1M", count: 8 },
-          { range: "$1M+", count: 5 },
+          { range: "৳50L-1C", count: 25 },
+          { range: "৳1C-2C", count: 48 },
+          { range: "৳2C-3C", count: 35 },
+          { range: "৳3C-5C", count: 20 },
+          { range: "৳5C-8C", count: 12 },
+          { range: "৳8C+", count: 5 },
         ],
         popularFeatures: [
-          { feature: "Hardwood Floors", score: 85 },
-          { feature: "Updated Kitchen", score: 78 },
-          { feature: "Large Backyard", score: 62 },
-          { feature: "Home Office", score: 58 },
-          { feature: "Smart Home", score: 45 },
-          { feature: "Pool", score: 25 },
+          { feature: "South Facing", score: 85 },
+          { feature: "Ready Flat", score: 78 },
+          { feature: "Car Parking", score: 72 },
+          { feature: "Generator", score: 65 },
+          { feature: "Lift System", score: 58 },
+          { feature: "Gas Connection", score: 52 },
         ],
         searchTrends: [
-          { term: "Downtown", frequency: 68 },
-          { term: "Pool", frequency: 52 },
-          { term: "Modern", frequency: 48 },
-          { term: "Garage", frequency: 45 },
-          { term: "Waterfront", frequency: 36 },
-          { term: "School District", frequency: 32 },
-          { term: "New Construction", frequency: 28 },
-          { term: "Views", frequency: 24 },
+          { term: "Gulshan", frequency: 68 },
+          { term: "Dhanmondi", frequency: 62 },
+          { term: "Bashundhara", frequency: 58 },
+          { term: "Banani", frequency: 52 },
+          { term: "Uttara", frequency: 48 },
+          { term: "Mirpur", frequency: 42 },
+          { term: "Mohammadpur", frequency: 38 },
+          { term: "Baridhara", frequency: 32 },
         ],
         topNeighborhoods: [
-          { name: "Downtown", interest: 89, change: 5.2 },
-          { name: "Highland Park", interest: 76, change: 3.8 },
-          { name: "Riverside", interest: 72, change: 7.1 },
-          { name: "West End", interest: 65, change: -2.3 },
-          { name: "North Hills", interest: 58, change: 1.5 },
+          { name: "Gulshan", interest: 89, change: 5.2 },
+          { name: "Dhanmondi", interest: 82, change: 4.8 },
+          { name: "Bashundhara", interest: 78, change: 7.1 },
+          { name: "Banani", interest: 75, change: -2.3 },
+          { name: "Uttara", interest: 72, change: 3.5 },
         ],
       };
       setData(dummyData);
@@ -151,7 +152,7 @@ const InsightsAnalytics = () => {
         d3
           .axisLeft(y)
           .ticks(5)
-          .tickFormat((d) => `$${d}k`)
+          .tickFormat((d) => `৳${d}L`)
       );
 
       // Add the line
@@ -617,12 +618,12 @@ const InsightsAnalytics = () => {
                 <div>
                   Average Price:{" "}
                   <span className="font-medium text-gray-700">
-                    $
+                    ৳
                     {data.marketTrends.reduce(
                       (sum, item) => sum + item.price,
                       0
                     ) / data.marketTrends.length}
-                    k
+                    L
                   </span>
                 </div>
                 <div>
@@ -654,11 +655,11 @@ const InsightsAnalytics = () => {
               <div className="mt-4 flex justify-between text-sm text-gray-500">
                 <div>
                   Most Common:{" "}
-                  <span className="font-medium text-gray-700">$200k-400k</span>
+                  <span className="font-medium text-gray-700">৳1C-2C</span>
                 </div>
                 <div>
                   Median Price:{" "}
-                  <span className="font-medium text-gray-700">$450k</span>
+                  <span className="font-medium text-gray-700">৳2.5C</span>
                 </div>
               </div>
             </div>
@@ -823,8 +824,8 @@ const InsightsAnalytics = () => {
                   <div>
                     <h3 className="font-medium">Price Drop Opportunities</h3>
                     <p className="text-sm text-blue-100 mt-1">
-                      5 properties in your watchlist have reduced their prices
-                      by an average of 8% this week.
+                      5 properties in your watchlist in Dhanmondi have reduced
+                      their prices by an average of 5% this week.
                     </p>
                   </div>
                 </div>
@@ -838,8 +839,8 @@ const InsightsAnalytics = () => {
                   <div>
                     <h3 className="font-medium">Market Prediction</h3>
                     <p className="text-sm text-blue-100 mt-1">
-                      Based on current trends, Downtown area is expected to see
-                      a 4-6% price increase in the next quarter.
+                      Based on current trends, Gulshan area is expected to see a
+                      6-8% price increase in the next quarter.
                     </p>
                   </div>
                 </div>
@@ -867,11 +868,11 @@ const InsightsAnalytics = () => {
                 </label>
                 <div className="relative">
                   <select className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
-                    <option>Downtown</option>
-                    <option>Highland Park</option>
-                    <option>Riverside</option>
-                    <option>West End</option>
-                    <option>North Hills</option>
+                    <option>Gulshan</option>
+                    <option>Dhanmondi</option>
+                    <option>Banani</option>
+                    <option>Bashundhara</option>
+                    <option>Uttara</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                     <ChevronDown size={16} className="text-gray-400" />
@@ -884,11 +885,11 @@ const InsightsAnalytics = () => {
                 </label>
                 <div className="relative">
                   <select className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
-                    <option>Riverside</option>
-                    <option>Downtown</option>
-                    <option>Highland Park</option>
-                    <option>West End</option>
-                    <option>North Hills</option>
+                    <option>Mirpur</option>
+                    <option>Mohammadpur</option>
+                    <option>Baridhara</option>
+                    <option>Motijheel</option>
+                    <option>Niketan</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                     <ChevronDown size={16} className="text-gray-400" />
@@ -903,7 +904,7 @@ const InsightsAnalytics = () => {
             </div>
             <div className="mt-6 border-t border-gray-200 pt-4">
               <div className="text-center text-gray-500 text-sm">
-                Select markets to compare detailed analytics and trends
+                Select areas to compare detailed analytics and market trends across Dhaka
               </div>
             </div>
           </div>
