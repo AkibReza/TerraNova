@@ -1,3 +1,5 @@
+import { getLocationProximityScore } from "../utils/locationUtils";
+
 //Sample
 
 const propertyData = [
@@ -40,7 +42,18 @@ const propertyData = [
   },
 ];
 
-// Updated calculateRoomDistanceScore function
+// Helper function to calculate location-based weight in the overall scoring
+function calculateLocationWeight(userLocation, propertyLocation) {
+  // Get the proximity score between the two locations
+  const proximityScore = getLocationProximityScore(
+    userLocation,
+    propertyLocation
+  );
+
+  // Return a weight that puts more emphasis on location matches
+  // This can be adjusted based on how much you want location to influence the overall score
+  return proximityScore * 1.5; // Increase the importance of location by 50%
+}
 
 // Updated calculateRoomDistanceScore function with improved price scoring
 function calculateRoomDistanceScore(userPreference, property, ranges) {
@@ -75,47 +88,24 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
 
   // Define weights for different features - adjust as needed
   featureWeights = {
-    price: 1.5, // Price is very important
-    propertyType: 1.2, // Property type is quite important
-    location: 1.3, // Location is very important
-    numberOfBedrooms: 1.2, // Bedrooms are quite important
-    numberOfBathrooms: 1, // Standard weight
-    propertySize: 1, // Standard weight
-    transactionType: 1.5, // Very important
-    amenities: 0.8, // Slightly less important
+    price: 1.5,
+    propertyType: 1.2,
+    location: 1.3,
+    numberOfBedrooms: 1.2,
+    numberOfBathrooms: 1,
+    propertySize: 1,
+    transactionType: 1.5,
+    amenities: 0.8,
   };
 
-  // Improved Price Scoring - use percentage-based difference
-  if (has("price")) {
-    const userPrice = parseInt(
-      String(userPreference.price).replace(/,/g, ""),
-      10
+  // Location scoring with proximity consideration
+  if (has("location")) {
+    const locationWeight = calculateLocationWeight(
+      userPreference.location,
+      property.location
     );
-    const propertyPrice = property.price;
-
-    // Calculate percentage difference relative to the user's price
-    // This makes the same absolute difference more significant for lower prices
-    const percentageDiff = Math.abs(userPrice - propertyPrice) / userPrice;
-
-    // Apply a scaling factor to convert percentage to a reasonable score
-    // This can be tuned based on your preferences
-    const MAX_ACCEPTABLE_PERCENT_DIFF = 0.3; // 30% difference
-    const priceScore = Math.min(
-      percentageDiff / MAX_ACCEPTABLE_PERCENT_DIFF,
-      1
-    );
-
-    totalDistance += priceScore * featureWeights.price;
-    featuresConsidered += featureWeights.price;
-  }
-
-  // Property Type (Categorical)
-  if (has("propertyType")) {
-    const userType = (userPreference.propertyType || "").toLowerCase();
-    const propType = (property.propertyType || "").toLowerCase();
-    totalDistance +=
-      (userType === propType ? 0 : 1) * featureWeights.propertyType;
-    featuresConsidered += featureWeights.propertyType;
+    totalDistance += (1 - locationWeight) * featureWeights.location;
+    featuresConsidered += featureWeights.location;
   }
 
   // Property Size
@@ -147,23 +137,31 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     featuresConsidered += featureWeights.numberOfBathrooms;
   }
 
-  // Location with proximity scoring
-  if (has("location")) {
-    // Get the location proximity score (0-1 where 1 is perfect match)
-    const userLocation = userPreference.location.trim();
-    const propLocation = property.location.trim();
-
-    // The proximityScore is already between 0-1 where 1 is perfect match and 0 is completely different
-    const proximityScore = getLocationProximityScore(
-      userLocation,
-      propLocation
+  // Improved Price Scoring - use percentage-based difference
+  if (has("price")) {
+    const userPrice = parseInt(
+      String(userPreference.price).replace(/,/g, ""),
+      10
+    );
+    const propertyPrice = property.price;
+    const percentageDiff = Math.abs(userPrice - propertyPrice) / userPrice;
+    const MAX_ACCEPTABLE_PERCENT_DIFF = 0.3; // 30% difference
+    const priceScore = Math.min(
+      percentageDiff / MAX_ACCEPTABLE_PERCENT_DIFF,
+      1
     );
 
-    // Convert to a distance (0 is perfect match, 1 is completely different)
-    const locationDistance = 1 - proximityScore;
+    totalDistance += priceScore * featureWeights.price;
+    featuresConsidered += featureWeights.price;
+  }
 
-    totalDistance += locationDistance * featureWeights.location;
-    featuresConsidered += featureWeights.location;
+  // Property Type (Categorical)
+  if (has("propertyType")) {
+    const userType = (userPreference.propertyType || "").toLowerCase();
+    const propType = (property.propertyType || "").toLowerCase();
+    totalDistance +=
+      (userType === propType ? 0 : 1) * featureWeights.propertyType;
+    featuresConsidered += featureWeights.propertyType;
   }
 
   // Transaction Type (Categorical)
@@ -188,7 +186,7 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     featuresConsidered += featureWeights.amenities;
   }
 
-  // Return the normalized distance score
+  // Return normalized score
   return featuresConsidered ? totalDistance / featuresConsidered : 0;
 }
 
@@ -228,7 +226,7 @@ function getPropertyRecommendations(userPreference) {
   // Find k nearest neighbors
   const nearestNeighbors = findKNearestNeighbors(
     userPreference,
-    originalPropertyData,
+    propertyData,
     5
   );
 
@@ -264,6 +262,7 @@ function getPropertyRecommendations(userPreference) {
 
 // Export functions for use in your application
 export {
+  propertyData,
   calculateRoomDistanceScore,
   findKNearestNeighbors,
   calculateMatchPercentage,

@@ -1,4 +1,5 @@
 import { propertyData } from "../dataset/Dataset";
+import { getLocationProximityScore } from "./locationUtils";
 
 /**
  * Calculate the Room Distance Score between user preferences and property
@@ -11,6 +12,16 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
   let featuresConsidered = 0;
   const has = (key) =>
     userPreference[key] !== undefined && userPreference[key] !== null;
+
+  // Location scoring with proximity consideration
+  if (has("location")) {
+    const proximityScore = getLocationProximityScore(
+      userPreference.location,
+      property.location
+    );
+    totalDistance += 1 - proximityScore; // Convert proximity to distance
+    featuresConsidered++;
+  }
 
   // Numerical features
   if (has("price")) {
@@ -55,12 +66,6 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     );
     const norm = ranges.bathroomRange ? diff / ranges.bathroomRange : 0;
     totalDistance += norm;
-    featuresConsidered++;
-  }
-
-  // Location feature
-  if (has("location")) {
-    totalDistance += userPreference.location === property.location ? 0 : 1;
     featuresConsidered++;
   }
 
@@ -142,15 +147,34 @@ function getPropertyRecommendations(userPreference) {
     5
   );
 
-  // Calculate match percentages
+  // Calculate match percentages and add location context
   const recommendations = nearestNeighbors.map((property) => {
+    let locationContext = "";
+    if (userPreference.location && property.location) {
+      const proximityScore = getLocationProximityScore(
+        userPreference.location,
+        property.location
+      );
+      locationContext = getLocationDescription(proximityScore);
+    }
+
     return {
       ...property,
       matchPercentage: calculateMatchPercentage(property.roomDistanceScore),
+      locationContext,
     };
   });
 
   return recommendations;
+}
+
+// Helper function to get human-readable location context
+function getLocationDescription(proximityScore) {
+  if (proximityScore === 1.0) return "Exact location match";
+  if (proximityScore >= 0.8) return "In adjacent area";
+  if (proximityScore >= 0.5) return "In nearby area";
+  if (proximityScore >= 0.2) return "In accessible area";
+  return "In different area";
 }
 
 export {
