@@ -55,7 +55,7 @@ function calculateLocationWeight(userLocation, propertyLocation) {
   return proximityScore * 1.5; // Increase the importance of location by 50%
 }
 
-// Updated calculateRoomDistanceScore function with improved price scoring
+// Updated calculateRoomDistanceScore function with tanh-based price scoring
 function calculateRoomDistanceScore(userPreference, property, ranges) {
   let totalDistance = 0;
   let featuresConsidered = 0;
@@ -137,19 +137,37 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     featuresConsidered += featureWeights.numberOfBathrooms;
   }
 
-  // Improved Price Scoring - use percentage-based difference
+  // Improved Price Scoring using tanh for diminishing marginal utility
   if (has("price")) {
     const userPrice = parseInt(
       String(userPreference.price).replace(/,/g, ""),
       10
     );
     const propertyPrice = property.price;
-    const percentageDiff = Math.abs(userPrice - propertyPrice) / userPrice;
-    const MAX_ACCEPTABLE_PERCENT_DIFF = 0.3; // 30% difference
-    const priceScore = Math.min(
-      percentageDiff / MAX_ACCEPTABLE_PERCENT_DIFF,
-      1
-    );
+
+    // Calculate the difference (can be positive or negative)
+    const priceDiff = propertyPrice - userPrice;
+
+    // Normalize the price difference relative to user's budget
+    // This makes a 10k difference more significant for lower budgets
+    const relativeDiff = priceDiff / userPrice;
+
+    // Apply tanh to implement diminishing marginal utility
+    // Scale factor controls how quickly the penalty increases
+    const scaleFactor = 3; // Adjust based on testing
+
+    // tanh returns values between -1 and 1
+    // We use Math.abs to penalize both higher and lower prices
+    // We add asymmetry to penalize higher prices more than lower ones
+    let priceScore;
+    if (priceDiff > 0) {
+      // Property costs more than user preference - higher penalty
+      priceScore = Math.abs(Math.tanh(scaleFactor * relativeDiff));
+    } else {
+      // Property costs less than user preference - lower penalty
+      // We can reduce the penalty for properties under budget
+      priceScore = Math.abs(Math.tanh(scaleFactor * relativeDiff * 0.7));
+    }
 
     totalDistance += priceScore * featureWeights.price;
     featuresConsidered += featureWeights.price;
