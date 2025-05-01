@@ -23,15 +23,23 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     featuresConsidered++;
   }
 
-  // Numerical features
+  // Numerical features with tanh for price (handling diminishing marginal utility)
   if (has("price")) {
     const userPrice = parseInt(
       String(userPreference.price).replace(/,/g, ""),
       10
     );
     const diff = Math.abs(userPrice - property.price);
-    const norm = ranges.priceRange ? diff / ranges.priceRange : 0;
-    totalDistance += norm;
+
+    // Apply tanh to create a non-linear scaling based on price magnitude
+    // The scaling factor determines how quickly sensitivity diminishes as price increases
+    // Lower values (e.g., 0.05) = more strict/sensitive to differences
+    // Higher values (e.g., 0.3) = more tolerant/forgiving of differences
+    const scalingFactor = 0.8; // Adjust this value to control sensitivity curve
+    const relativeDiff = diff / userPrice;
+    const scaledDiff = Math.tanh(relativeDiff / scalingFactor);
+
+    totalDistance += scaledDiff;
     featuresConsidered++;
   }
 
