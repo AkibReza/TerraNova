@@ -86,11 +86,15 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
 
   // Amenities (Jaccard Distance)
   if (has("amenities") && Array.isArray(userPreference.amenities)) {
-    const userAmen = new Set(userPreference.amenities);
-    const propAmen = new Set(property.amenities);
-    const intersection = new Set([...userAmen].filter((x) => propAmen.has(x)));
-    const union = new Set([...userAmen, ...propAmen]);
-    totalDistance += 1 - (intersection.size / union.size || 0);
+    const userAmen = new Set(
+      userPreference.amenities.map((a) => a.toLowerCase())
+    );
+    const propAmen = new Set(property.amenities.map((a) => a.toLowerCase()));
+
+    // Only check if property has all requested amenities
+    const matchCount = [...userAmen].filter((x) => propAmen.has(x)).length;
+    const score = matchCount / userAmen.size; // Perfect score if all requested amenities are present
+    totalDistance += 1 - score;
     featuresConsidered++;
   }
 

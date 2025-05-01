@@ -18,7 +18,7 @@ const PropertyCard = ({ property }) => {
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="p-5 h-fit">
         <h3 className="text-xl font-bold text-gray-800 mb-2">
           {property.propertyType} in {property.location}
         </h3>
@@ -54,7 +54,7 @@ const PropertyCard = ({ property }) => {
             Amenities:
           </h4>
           <div className="flex flex-wrap">
-            {property.amenities.slice(0, 3).map((amenity, index) => (
+            {property.amenities.map((amenity, index) => (
               <span
                 key={index}
                 className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-full mr-2 mb-2"
@@ -62,11 +62,6 @@ const PropertyCard = ({ property }) => {
                 {amenity}
               </span>
             ))}
-            {property.amenities.length > 3 && (
-              <span className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-full mr-2 mb-2">
-                +{property.amenities.length - 3} more
-              </span>
-            )}
           </div>
         </div>
 

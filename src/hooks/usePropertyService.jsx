@@ -66,7 +66,11 @@ export const usePropertyService = () => {
         Array.isArray(parsedData.amenities) &&
         parsedData.amenities.length > 0
       ) {
-        result.amenities = parsedData.amenities;
+        result.amenities = parsedData.amenities.map((amenity) =>
+          typeof amenity === "string"
+            ? amenity.charAt(0).toUpperCase() + amenity.slice(1).toLowerCase()
+            : amenity
+        );
       }
 
       if (
