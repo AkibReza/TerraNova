@@ -1,7 +1,29 @@
+import React from "react";
 import { motion } from "framer-motion";
 import PropertyCard from "./PropertyCard";
 
-const PropertyList = ({ properties }) => {
+// Change the component to accept recommendations as a prop
+const PropertyList = ({ recommendations }) => {
+  if (!recommendations) {
+    return (
+      <div className="bg-white p-8 rounded-xl shadow-lg border border-blue-100 w-full text-center py-10">
+        <p className="text-gray-500">
+          Enter your preferences to see recommendations
+        </p>
+      </div>
+    );
+  }
+
+  if (recommendations.length === 0) {
+    return (
+      <div className="bg-white p-8 rounded-xl shadow-lg border border-blue-100 w-full text-center py-10">
+        <p className="text-gray-500">
+          No properties found matching your criteria.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -21,19 +43,11 @@ const PropertyList = ({ properties }) => {
         </p>
       </div>
 
-      {properties.length === 0 ? (
-        <div className="text-center py-10">
-          <p className="text-gray-500">
-            No properties found matching your criteria.
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {recommendations.map((property) => (
+          <PropertyCard key={property._id || property.id} property={property} />
+        ))}
+      </div>
     </motion.div>
   );
 };

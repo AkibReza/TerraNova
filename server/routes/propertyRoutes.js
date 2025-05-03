@@ -2,6 +2,16 @@ const express = require("express");
 const router = express.Router();
 const Property = require("../models/Property");
 
+// GET route to fetch all properties
+router.get("/", async (req, res) => {
+  try {
+    const properties = await Property.find();
+    res.json(properties);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // POST route to add a property
 router.post("/", async (req, res) => {
   try {

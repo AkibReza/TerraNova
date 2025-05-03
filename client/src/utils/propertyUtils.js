@@ -1,5 +1,6 @@
 import { propertyData } from "../dataset/Dataset";
 import { getLocationProximityScore } from "./locationUtils";
+import { propertyService } from "../services/propertyService";
 
 /**
  * Calculate the Room Distance Score between user preferences and property
@@ -8,6 +9,10 @@ import { getLocationProximityScore } from "./locationUtils";
  * @returns {number} - Normalized distance score (0-1, where 0 is perfect match)
  */
 function calculateRoomDistanceScore(userPreference, property, ranges) {
+  console.log("Calculating score for property:", property);
+  console.log("User preferences:", userPreference);
+  console.log("Ranges:", ranges);
+
   let totalDistance = 0;
   let featuresConsidered = 0;
   const has = (key) =>
@@ -19,25 +24,34 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
       userPreference.location,
       property.location
     );
-    totalDistance += 1 - proximityScore; // Convert proximity to distance
+    console.log("Location proximity score:", proximityScore);
+    totalDistance += 1 - proximityScore;
     featuresConsidered++;
   }
 
-  // Numerical features with tanh for price (handling diminishing marginal utility)
+  // Price scoring
   if (has("price")) {
-    const userPrice = parseInt(
-      String(userPreference.price).replace(/,/g, ""),
-      10
-    );
-    const diff = Math.abs(userPrice - property.price);
+    const userPrice =
+      typeof userPreference.price === "string"
+        ? parseInt(userPreference.price.replace(/,/g, ""), 10)
+        : userPreference.price;
 
-    // Apply tanh to create a non-linear scaling based on price magnitude
-    // The scaling factor determines how quickly sensitivity diminishes as price increases
-    // Lower values (e.g., 0.05) = more strict/sensitive to differences
-    // Higher values (e.g., 0.3) = more tolerant/forgiving of differences
-    const scalingFactor = 0.8; // Adjust this value to control sensitivity curve
+    const propertyPrice =
+      typeof property.price === "object"
+        ? property.price.$numberInt
+        : property.price;
+
+    const diff = Math.abs(userPrice - propertyPrice);
+    const scalingFactor = 0.8;
     const relativeDiff = diff / userPrice;
     const scaledDiff = Math.tanh(relativeDiff / scalingFactor);
+
+    console.log("Price comparison:", {
+      userPrice,
+      propertyPrice,
+      diff,
+      scaledDiff,
+    });
 
     totalDistance += scaledDiff;
     featuresConsidered++;
@@ -47,58 +61,101 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
   if (has("propertyType")) {
     const userType = (userPreference.propertyType || "").toLowerCase();
     const propType = (property.propertyType || "").toLowerCase();
-    totalDistance += userType === propType ? 0 : 1;
+    const typeMatch = userType === propType ? 0 : 1;
+    console.log("Property type match:", { userType, propType, typeMatch });
+    totalDistance += typeMatch;
     featuresConsidered++;
   }
 
+  // Property Size
   if (has("propertySize") || has("size")) {
     const userSize = userPreference.propertySize ?? userPreference.size;
-    const diff = Math.abs(userSize - property.propertySize);
+    const propertySize =
+      typeof property.propertySize === "object"
+        ? parseInt(property.propertySize.$numberInt)
+        : property.propertySize;
+
+    const diff = Math.abs(userSize - propertySize);
     const norm = ranges.sizeRange ? diff / ranges.sizeRange : 0;
+    console.log("Size comparison:", { userSize, propertySize, diff, norm });
     totalDistance += norm;
     featuresConsidered++;
   }
 
+  // Bedrooms
   if (has("numberOfBedrooms")) {
-    const diff = Math.abs(
-      userPreference.numberOfBedrooms - property.numberOfBedrooms
-    );
+    const propertyBedrooms =
+      typeof property.numberOfBedrooms === "object"
+        ? parseInt(property.numberOfBedrooms.$numberInt)
+        : property.numberOfBedrooms;
+
+    const diff = Math.abs(userPreference.numberOfBedrooms - propertyBedrooms);
     const norm = ranges.bedroomRange ? diff / ranges.bedroomRange : 0;
+    console.log("Bedroom comparison:", {
+      userBedrooms: userPreference.numberOfBedrooms,
+      propertyBedrooms,
+      diff,
+      norm,
+    });
     totalDistance += norm;
     featuresConsidered++;
   }
 
+  // Bathrooms
   if (has("numberOfBathrooms")) {
-    const diff = Math.abs(
-      userPreference.numberOfBathrooms - property.numberOfBathrooms
-    );
+    const propertyBathrooms =
+      typeof property.numberOfBathrooms === "object"
+        ? parseInt(property.numberOfBathrooms.$numberInt)
+        : property.numberOfBathrooms;
+
+    const diff = Math.abs(userPreference.numberOfBathrooms - propertyBathrooms);
     const norm = ranges.bathroomRange ? diff / ranges.bathroomRange : 0;
+    console.log("Bathroom comparison:", {
+      userBathrooms: userPreference.numberOfBathrooms,
+      propertyBathrooms,
+      diff,
+      norm,
+    });
     totalDistance += norm;
     featuresConsidered++;
   }
 
-  // Transaction type (rent/sale)
+  // Transaction type
   if (has("transactionType")) {
-    totalDistance +=
+    const typeMatch =
       userPreference.transactionType === property.transactionType ? 0 : 1;
+    console.log("Transaction type match:", {
+      userType: userPreference.transactionType,
+      propertyType: property.transactionType,
+      typeMatch,
+    });
+    totalDistance += typeMatch;
     featuresConsidered++;
   }
 
-  // Amenities (Jaccard Distance)
+  // Amenities
   if (has("amenities") && Array.isArray(userPreference.amenities)) {
     const userAmen = new Set(
       userPreference.amenities.map((a) => a.toLowerCase())
     );
     const propAmen = new Set(property.amenities.map((a) => a.toLowerCase()));
-
-    // Only check if property has all requested amenities
     const matchCount = [...userAmen].filter((x) => propAmen.has(x)).length;
-    const score = matchCount / userAmen.size; // Perfect score if all requested amenities are present
+    const score = matchCount / userAmen.size;
+    console.log("Amenities comparison:", {
+      userAmenities: [...userAmen],
+      propertyAmenities: [...propAmen],
+      matchCount,
+      score,
+    });
     totalDistance += 1 - score;
     featuresConsidered++;
   }
 
-  return featuresConsidered ? totalDistance / featuresConsidered : 0;
+  const finalScore = featuresConsidered
+    ? totalDistance / featuresConsidered
+    : 0;
+  console.log("Final distance score:", finalScore);
+  return finalScore;
 }
 
 /**
@@ -136,51 +193,81 @@ function findKNearestNeighbors(userPreference, properties, k = 5) {
  * Calculate match percentage from room distance score
  */
 function calculateMatchPercentage(roomDistanceScore) {
-  // Ensure the final percentage is between 0 and 100
-  return Math.max(0, Math.min(100, Math.round((1 - roomDistanceScore) * 100)));
+  const percentage = Math.max(
+    0,
+    Math.min(100, Math.round((1 - roomDistanceScore) * 100))
+  );
+  console.log("Calculated match percentage:", percentage);
+  return percentage;
 }
 
 /**
  * Get property recommendations based on user preferences
  */
-function getPropertyRecommendations(userPreference) {
-  // Filter by transaction type if specified
-  let filteredProperties = propertyData;
+async function getPropertyRecommendations(userPreference) {
+  try {
+    // Fetch properties from MongoDB
+    const properties = await propertyService.getAllProperties();
+    console.log("All properties fetched:", properties.length);
 
-  if (userPreference.transactionType) {
-    filteredProperties = propertyData.filter(
-      (property) => property.transactionType === userPreference.transactionType
-    );
-  }
-
-  // Find k nearest neighbors
-  const nearestNeighbors = findKNearestNeighbors(
-    userPreference,
-    filteredProperties,
-    5
-  );
-
-  // Calculate match percentages and add location context
-  const recommendations = nearestNeighbors.map((property) => {
-    let locationContext = "";
-    if (userPreference.location && property.location) {
-      const proximityScore = getLocationProximityScore(
-        userPreference.location,
-        property.location
+    // Filter by transaction type if specified
+    let filteredProperties = properties;
+    if (userPreference.transactionType) {
+      filteredProperties = properties.filter(
+        (property) =>
+          property.transactionType === userPreference.transactionType
       );
-      locationContext = getLocationDescription(proximityScore);
+      console.log("Filtered by transaction type:", filteredProperties.length);
     }
 
-    return {
-      ...property,
-      matchPercentage: calculateMatchPercentage(property.roomDistanceScore),
-      locationContext,
-    };
-  });
+    // Find k nearest neighbors
+    const nearestNeighbors = findKNearestNeighbors(
+      userPreference,
+      filteredProperties,
+      5
+    );
+    console.log("Nearest neighbors found:", nearestNeighbors.length);
 
-  return recommendations;
+    // Calculate match percentages and add location context
+    const recommendations = nearestNeighbors.map((property) => {
+      let locationContext = "";
+      if (userPreference.location && property.location) {
+        const proximityScore = getLocationProximityScore(
+          userPreference.location,
+          property.location
+        );
+        locationContext = getLocationDescription(proximityScore);
+      }
+
+      const matchPercentage = calculateMatchPercentage(
+        property.roomDistanceScore
+      );
+
+      // Debug the property and its match percentage
+      console.log(`Property ${property._id}: ${matchPercentage}% match`);
+
+      return {
+        ...property,
+        matchPercentage,
+        locationContext,
+      };
+    });
+
+    console.log(
+      "Final recommendations with match percentages:",
+      recommendations.map((rec) => ({
+        id: rec._id,
+        location: rec.location,
+        matchPercentage: rec.matchPercentage,
+      }))
+    );
+
+    return recommendations;
+  } catch (error) {
+    console.error("Error getting recommendations:", error);
+    throw error;
+  }
 }
-
 // Helper function to get human-readable location context
 function getLocationDescription(proximityScore) {
   if (proximityScore === 1.0) return "Exact location match";

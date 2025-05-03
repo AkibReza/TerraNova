@@ -76,7 +76,7 @@ const Home = () => {
         {/* Property Recommendations */}
         {showRecommendations && (
           <div className="max-w-6xl mx-auto mb-12">
-            <PropertyList properties={recommendations} />
+            <PropertyList recommendations={recommendations} />
           </div>
         )}
 

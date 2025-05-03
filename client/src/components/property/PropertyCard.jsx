@@ -1,6 +1,53 @@
 import { motion } from "framer-motion";
 
 const PropertyCard = ({ property }) => {
+  // Debug logging to see what's being received
+  console.log("PropertyCard received property:", property);
+  console.log("Match percentage value:", property.matchPercentage);
+
+  // Handle price that might be a number or an object with $numberInt
+  const getPrice = () => {
+    if (typeof property.price === "object" && property.price.$numberInt) {
+      return parseInt(property.price.$numberInt).toLocaleString();
+    } else if (typeof property.price === "number") {
+      return property.price.toLocaleString();
+    }
+    return property.price;
+  };
+
+  // Handle property size that might be a number or an object with $numberInt
+  const getPropertySize = () => {
+    if (
+      typeof property.propertySize === "object" &&
+      property.propertySize.$numberInt
+    ) {
+      return property.propertySize.$numberInt;
+    }
+    return property.propertySize;
+  };
+
+  // Handle bedrooms that might be a number or an object with $numberInt
+  const getBedrooms = () => {
+    if (
+      typeof property.numberOfBedrooms === "object" &&
+      property.numberOfBedrooms.$numberInt
+    ) {
+      return property.numberOfBedrooms.$numberInt;
+    }
+    return property.numberOfBedrooms;
+  };
+
+  // Handle bathrooms that might be a number or an object with $numberInt
+  const getBathrooms = () => {
+    if (
+      typeof property.numberOfBathrooms === "object" &&
+      property.numberOfBathrooms.$numberInt
+    ) {
+      return property.numberOfBathrooms.$numberInt;
+    }
+    return property.numberOfBathrooms;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -14,7 +61,10 @@ const PropertyCard = ({ property }) => {
           <div className="text-blue-800 font-semibold">Property Image</div>
         </div>
         <div className="absolute top-3 right-3 bg-blue-600 text-white font-bold py-1 px-3 rounded-full text-sm">
-          {property.matchPercentage}% Match
+          {typeof property.matchPercentage === "number"
+            ? property.matchPercentage
+            : 0}
+          % Match
         </div>
       </div>
 
@@ -23,27 +73,23 @@ const PropertyCard = ({ property }) => {
           {property.propertyType} in {property.location}
         </h3>
         <p className="text-blue-600 font-bold text-lg mb-3">
-          ৳{property.price.toLocaleString()}
+          ৳{getPrice()}
           {property.transactionType === "Rent" ? "/month" : ""}
         </p>
 
         <div className="flex flex-wrap mb-4">
           <div className="flex items-center mr-4 mb-2">
             <span className="text-gray-700 text-sm">
-              {property.propertySize} sq ft
+              {getPropertySize()} sq ft
             </span>
           </div>
 
           <div className="flex items-center mr-4 mb-2">
-            <span className="text-gray-700 text-sm">
-              {property.numberOfBedrooms} bd
-            </span>
+            <span className="text-gray-700 text-sm">{getBedrooms()} bd</span>
           </div>
 
           <div className="flex items-center mb-2">
-            <span className="text-gray-700 text-sm">
-              {property.numberOfBathrooms} ba
-            </span>
+            <span className="text-gray-700 text-sm">{getBathrooms()} ba</span>
           </div>
         </div>
 
@@ -54,7 +100,7 @@ const PropertyCard = ({ property }) => {
             Amenities:
           </h4>
           <div className="flex flex-wrap">
-            {property.amenities.map((amenity, index) => (
+            {(property.amenities || []).map((amenity, index) => (
               <span
                 key={index}
                 className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-full mr-2 mb-2"

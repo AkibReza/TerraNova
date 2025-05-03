@@ -191,7 +191,7 @@ export const usePropertyService = () => {
         setUserPreference(processedData);
 
         // Generate recommendations based on the processed data
-        const recommendations = getPropertyRecommendations(processedData);
+        const recommendations = await getPropertyRecommendations(processedData);
         setRecommendations(recommendations);
         return { preferences: processedData, recommendations };
       }
