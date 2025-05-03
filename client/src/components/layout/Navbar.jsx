@@ -16,6 +16,7 @@ const Navbar = () => {
     { name: "Best Offers", path: "/TerraNova/best-offers" },
     { name: "Your Favorites", path: "/TerraNova/favorites" },
     { name: "Contact Us", path: "/TerraNova/contact" },
+    { name: "Add Property", path: "/TerraNova/add-property" },
   ];
 
   // Handle scroll effect

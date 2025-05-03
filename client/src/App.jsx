@@ -9,6 +9,7 @@ import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import { AuthProvider } from "./contexts/AuthContext";
 import PropertyList from "./components/property/PropertyList";
+import AddProperty from "./components/property/AddProperty";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/TerraNova/contact" element={<Contact />} />
             <Route path="/TerraNova/auth" element={<Auth />} />
             <Route path="/TerraNova/propertyList" element={<PropertyList />} />
+            <Route path="/TerraNova/add-property" element={<AddProperty />} />
           </Routes>
         </Layout>
       </Router>
