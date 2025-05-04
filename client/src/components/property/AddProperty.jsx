@@ -46,13 +46,16 @@ const AddProperty = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/api/properties", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(processedData),
-      });
+      const response = await fetch(
+        "https://terranova.onrender.com/api/properties",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(processedData),
+        }
+      );
 
       if (response.ok) {
         setIsSubmitting(false);
