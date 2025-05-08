@@ -1,0 +1,13 @@
+// filepath: real-estate-project/src/components/pages/PrivacyPolicy.jsx
+import React from 'react';
+
+const PrivacyPolicy = () => {
+  return (
+    <div>
+      <h1>Privacy Policy</h1>
+      <p>This page outlines our privacy policy.</p>
+    </div>
+  );
+};
+
+export default PrivacyPolicy;
