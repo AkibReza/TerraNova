@@ -23,12 +23,13 @@ import FAQs from "./components/pages/FAQs";
 import PrivacyPolicy from "./components/pages/PrivacyPolicy";
 import TermsOfService from "./components/pages/TermsOfService";
 import CookiePolicy from "./components/pages/CookiePolicy";
-
+import ScrollToTop from "./components/utils/ScrollToTop";
 
 function App() {
   return (
     <AuthProvider>
       <Router basename="/TerraNova">
+        <ScrollToTop />
         <div className="flex flex-col min-h-screen">
           <main className="flex-grow">
             <Routes>
