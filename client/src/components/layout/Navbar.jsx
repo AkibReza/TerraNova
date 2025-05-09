@@ -101,7 +101,7 @@ const Navbar = () => {
               </div>
             ) : (
               <Link
-                to="/TerraNova/auth"
+                to="/auth"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Login / Sign Up
@@ -193,7 +193,7 @@ const Navbar = () => {
             </div>
           ) : (
             <Link
-              to="/TerraNova/auth"
+              to="/auth"
               className="block w-full mt-4 px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white text-center hover:bg-blue-700"
               onClick={() => setIsMobileMenuOpen(false)}
             >
