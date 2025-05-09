@@ -43,8 +43,17 @@ function App() {
               <Route path="/add-property" element={<AddProperty />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/for-sale" element={<ForSale />} />
-              <Route path="/about-us" element={<AboutUs />} />
               <Route path="/for-rent" element={<ForRent />} />
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/faqs" element={<FAQs />} />
+              <Route path="/guides" element={<Guides />} />
+              <Route path="/new-projects" element={<NewProjects />} />
+              <Route path="/our-team" element={<OurTeam />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="*" element={<div>Page not found</div>} />
             </Routes>
           </main>
