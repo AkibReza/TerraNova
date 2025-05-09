@@ -40,21 +40,12 @@ function App() {
               <Route path="/best-offers" element={<BestOffers />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/propertyList" element={<PropertyList />} />
               <Route path="/add-property" element={<AddProperty />} />
+              <Route path="/auth" element={<Auth />} />
               <Route path="/for-sale" element={<ForSale />} />
-              <Route path="/for-rent" element={<ForRent />} />
-              <Route path="/new-projects" element={<NewProjects />} />
               <Route path="/about-us" element={<AboutUs />} />
-              <Route path="/our-team" element={<OurTeam />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/guides" element={<Guides />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/faqs" element={<FAQs />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
-              <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/for-rent" element={<ForRent />} />
+              <Route path="*" element={<div>Page not found</div>} />
             </Routes>
           </main>
           <Footer />

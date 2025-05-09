@@ -11,12 +11,12 @@ const Navbar = () => {
 
   // Navigation links
   const navLinks = [
-    { name: "Home", path: "/TerraNova/" },
-    { name: "Insights & Analytics", path: "/TerraNova/insights" },
-    { name: "Best Offers", path: "/TerraNova/best-offers" },
-    { name: "Your Favorites", path: "/TerraNova/favorites" },
-    { name: "Contact Us", path: "/TerraNova/contact" },
-    { name: "Add Property", path: "/TerraNova/add-property" },
+    { name: "Home", path: "/" },
+    { name: "Insights", path: "/insights" },
+    { name: "Best Offers", path: "/best-offers" },
+    { name: "Your Favorites", path: "/favorites" },
+    { name: "Contact Us", path: "/contact" },
+    { name: "Add Property", path: "/add-property" },
   ];
 
   // Handle scroll effect
@@ -50,7 +50,7 @@ const Navbar = () => {
             transition={{ duration: 0.5 }}
             className="flex-shrink-0"
           >
-            <Link to="/TerraNova/" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <span className="text-2xl font-bold text-blue-600">
                 TerraNova
               </span>

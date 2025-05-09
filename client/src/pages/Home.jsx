@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import PropertyRequirementForm from "../components/property/PropertyRequirementForm";
 import PropertyList from "../components/property/PropertyList";
@@ -14,15 +14,29 @@ const Home = () => {
     error,
   } = usePropertyService();
 
+  // Add error logging
+  useEffect(() => {
+    if (error) {
+      console.error('Property Service Error:', error);
+    }
+  }, [error]);
+
   const handleFormSubmit = async (userInput) => {
-    const result = await processUserInput(userInput);
-    if (result) {
-      setShowRecommendations(true);
+    try {
+      const result = await processUserInput(userInput);
+      if (result) {
+        setShowRecommendations(true);
+      }
+    } catch (err) {
+      console.error('Form Submit Error:', err);
     }
   };
 
+  // Add a console log to verify the component is rendering
+  console.log('Home component rendering');
+
   return (
-    <div className="py-10 px-4">
+    <div className="py-10 px-4" data-testid="home-page">
       <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <motion.div
