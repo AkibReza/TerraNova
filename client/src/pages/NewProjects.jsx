@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Clock, 
   Check, 
@@ -78,48 +78,79 @@ const VersionCard = ({ version, date, features, isCurrent, isUpcoming }) => {
           >
             {isUpcoming ? "✨ Upcoming" : isCurrent ? "🚀 Current" : "🏆 Released"}
           </motion.span>
-          {isExpanded ? (
-            <ChevronUp size={20} className="text-gray-500" />
-          ) : (
+          
+          <motion.div
+            initial={false}
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          >
             <ChevronDown size={20} className="text-gray-500" />
-          )}
+          </motion.div>
         </div>
       </div>
       
-      {isExpanded && (
-        <motion.div 
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
-          className={`p-4 ${isUpcoming ? "bg-blue-50" : isCurrent ? "bg-green-50" : "bg-gray-50"}`}
-        >
-          <h4 className="font-semibold mb-3 text-gray-700">Features:</h4>
-          <ul className="space-y-3">
-            {features.map((feature, index) => (
-              <motion.li 
-                key={index}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-start gap-3"
-              >
-                <motion.div 
-                  className={`mt-1 p-2 rounded-full ${isUpcoming ? "bg-blue-100" : isCurrent ? "bg-green-100" : "bg-gray-100"}`}
-                  whileHover={{ rotate: 15, scale: 1.1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                >
-                  {feature.icon}
-                </motion.div>
-                <div>
-                  <p className="font-medium">{feature.title}</p>
-                  <p className="text-sm text-gray-600">{feature.description}</p>
-                </div>
-              </motion.li>
-            ))}
-          </ul>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ 
+              opacity: 1, 
+              height: "auto", 
+              transition: { 
+                height: { 
+                  duration: 0.4,
+                  ease: "easeInOut" 
+                },
+                opacity: { 
+                  duration: 0.25,
+                  delay: 0.1 
+                }
+              }
+            }}
+            exit={{ 
+              opacity: 0, 
+              height: 0,
+              transition: { 
+                height: { 
+                  duration: 0.4,
+                  ease: "easeInOut" 
+                },
+                opacity: { 
+                  duration: 0.25 
+                }
+              }
+            }}
+            className={`overflow-hidden ${isUpcoming ? "bg-blue-50" : isCurrent ? "bg-green-50" : "bg-gray-50"}`}
+          >
+            <div className="p-4">
+              <h4 className="font-semibold mb-3 text-gray-700">Features:</h4>
+              <ul className="space-y-3">
+                {features.map((feature, index) => (
+                  <motion.li 
+                    key={index}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-start gap-3"
+                  >
+                    <motion.div 
+                      className={`mt-1 p-2 rounded-full ${isUpcoming ? "bg-blue-100" : isCurrent ? "bg-green-100" : "bg-gray-100"}`}
+                      whileHover={{ rotate: 15, scale: 1.1 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      {feature.icon}
+                    </motion.div>
+                    <div>
+                      <p className="font-medium">{feature.title}</p>
+                      <p className="text-sm text-gray-600">{feature.description}</p>
+                    </div>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

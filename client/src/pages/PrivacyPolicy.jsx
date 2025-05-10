@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Shield, FileText, Database, ChevronDown, ChevronUp, Lock, Bell, Server, Users } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Shield, FileText, Database, ChevronDown, Lock, Bell, Server, Users } from 'lucide-react';
 
 const PrivacyPolicy = () => {
   const [expandedSections, setExpandedSections] = useState({
@@ -27,6 +27,30 @@ const PrivacyPolicy = () => {
     transition: { duration: 0.5 }
   };
 
+  // Improved accordion animation properties
+  const accordionVariants = {
+    open: {
+      opacity: 1,
+      height: "auto",
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        opacity: { duration: 0.2, delay: 0.1 }
+      }
+    },
+    closed: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        opacity: { duration: 0.2 }
+      }
+    }
+  };
+
   const AccordionSection = ({ id, title, icon: Icon, children }) => {
     // Determine if this section should have smaller text
     const isSmaller = ["overview", "sharing", "cookies", "changes"].includes(id);
@@ -46,23 +70,35 @@ const PrivacyPolicy = () => {
             <Icon className={`${isSmaller ? "h-4 w-4" : "h-5 w-5"} text-indigo-500`} />
             <span>{title}</span>
           </div>
-          {expandedSections[id] ? 
-            <ChevronUp className={`${isSmaller ? "h-4 w-4" : "h-5 w-5"} text-gray-500`} /> : 
+          <motion.div
+            initial={false}
+            animate={{ rotate: expandedSections[id] ? 180 : 0 }}
+            transition={{ 
+              duration: 0.4, 
+              type: "spring", 
+              stiffness: 400, 
+              damping: 25 
+            }}
+          >
             <ChevronDown className={`${isSmaller ? "h-4 w-4" : "h-5 w-5"} text-gray-500`} />
-          }
+          </motion.div>
         </button>
         
-        {expandedSections[id] && (
-          <motion.div 
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`mt-3 text-gray-600 pl-8 ${isSmaller ? "text-sm" : ""}`}
-          >
-            {children}
-          </motion.div>
-        )}
+        <AnimatePresence initial={false}>
+          {expandedSections[id] && (
+            <motion.div 
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={accordionVariants}
+              className="overflow-hidden"
+            >
+              <div className={`mt-3 text-gray-600 pl-8 ${isSmaller ? "text-sm" : ""}`}>
+                {children}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     );
   };
@@ -74,6 +110,32 @@ const PrivacyPolicy = () => {
     day: 'numeric'
   });
 
+  // Improved window animation properties
+  const windowAnimationVariants = {
+    maximize: {
+      scale: 1,
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 25,
+        duration: 0.4
+      }
+    },
+    minimize: {
+      scale: 0.95,
+      opacity: 0.8,
+      y: 10,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 25,
+        duration: 0.4
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       {/* Page Header - Empty for clean look */}
@@ -81,13 +143,13 @@ const PrivacyPolicy = () => {
         {/* Header content removed as requested */}
       </header>
       
-      {/* Main Content */}
+      {/* Main Content with improved animations */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           className="bg-white rounded-lg shadow-lg overflow-hidden"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          initial="minimize"
+          animate="maximize"
+          variants={windowAnimationVariants}
         >
           <div className="bg-gradient-to-r from-blue-600 to-indigo-500 px-6 py-8 md:px-10">
             <div className="flex items-center justify-between">
@@ -98,7 +160,12 @@ const PrivacyPolicy = () => {
               <motion.div 
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 25,
+                  delay: 0.2 
+                }}
               >
                 <Lock className="h-12 w-12 text-white opacity-80" />
               </motion.div>
@@ -267,7 +334,11 @@ const PrivacyPolicy = () => {
               className="mt-8 pt-6 border-t border-gray-200"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
+              transition={{ 
+                delay: 0.3, 
+                duration: 0.5,
+                ease: "easeOut" 
+              }}
             >
               <h3 className="text-lg font-medium text-gray-900">Contact Us</h3>
               <p className="mt-2 text-gray-600">

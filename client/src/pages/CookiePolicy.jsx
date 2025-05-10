@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Cookie, ChevronDown, ChevronUp, Shield, Database, Server, Globe, AlertCircle, Clock } from 'lucide-react';
 
 const CookiePolicy = () => {
@@ -11,6 +11,13 @@ const CookiePolicy = () => {
     managingCookies: true,
     changes: true
   });
+  
+  // Add state for window maximize/minimize
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  const toggleMaximize = () => {
+    setIsMaximized(!isMaximized);
+  };
 
   const toggleSection = (section) => {
     setExpandedSections({
@@ -23,6 +30,18 @@ const CookiePolicy = () => {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.5 }
+  };
+
+  // Improved window animation
+  const windowAnimation = {
+    maximize: {
+      scale: 1.02,
+      transition: { duration: 0.3, ease: "easeInOut" }
+    },
+    minimize: {
+      scale: 0.98,
+      transition: { duration: 0.3, ease: "easeInOut" }
+    }
   };
 
   const AccordionSection = ({ id, title, icon: Icon, children }) => {
@@ -47,17 +66,19 @@ const CookiePolicy = () => {
           }
         </button>
         
-        {expandedSections[id] && (
-          <motion.div 
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="mt-3 text-gray-600 pl-8"
-          >
-            {children}
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {expandedSections[id] && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mt-3 text-gray-600 pl-8"
+            >
+              {children}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     );
   };
@@ -69,17 +90,51 @@ const CookiePolicy = () => {
     day: 'numeric'
   });
 
+  // Window control buttons
+  const WindowControls = () => (
+    <div className="absolute top-0 right-0 flex items-center p-2">
+      <button className="mx-1 w-3 h-3 bg-yellow-400 rounded-full" />
+      <button className="mx-1 w-3 h-3 bg-green-400 rounded-full" />
+      <motion.button 
+        className="mx-1 w-3 h-3 bg-red-400 rounded-full"
+        whileHover={{ scale: 1.2 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={toggleMaximize}
+        aria-label={isMaximized ? "Minimize" : "Maximize"}
+      />
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      {/* Main Content */}
+    <div className="min-h-screen bg-gray-50 py-12">
+      {/* Navigation bar simulation */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div className="flex items-center justify-between">
+          <div className="text-xl font-bold text-indigo-600">TerraNova</div>
+          <div className="flex space-x-6">
+            <a href="#" className="text-gray-600 hover:text-indigo-600">Home</a>
+            <a href="#" className="text-gray-600 hover:text-indigo-600">Insights</a>
+            <a href="#" className="text-gray-600 hover:text-indigo-600">Best Offers</a>
+            <a href="#" className="text-gray-600 hover:text-indigo-600">Your Favorites</a>
+            <a href="#" className="text-gray-600 hover:text-indigo-600">Contact Us</a>
+            <a href="#" className="text-gray-600 hover:text-indigo-600">Add Property</a>
+          </div>
+          <button className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+            Login / Sign Up
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content with improved spacing */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
-          className="bg-white rounded-lg shadow-lg overflow-hidden"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          className="bg-white rounded-lg shadow-lg overflow-hidden relative"
+          variants={windowAnimation}
+          animate={isMaximized ? "maximize" : "minimize"}
+          initial="minimize"
         >
-          <div className="bg-gradient-to-r from-indigo-600 to-blue-500 px-6 py-8 md:px-10">
+          <WindowControls />
+          <div className="bg-gradient-to-r from-indigo-600 to-blue-500 px-6 py-10 md:px-10">
             <div className="flex items-center justify-between">
               <motion.div {...fadeInUp}>
                 <h1 className="text-2xl md:text-3xl font-bold text-white">Cookie Policy</h1>
