@@ -29,7 +29,7 @@ import Navbar from "./components/layout/Navbar";
 function App() {
   return (
     <AuthProvider>
-      <Router basename="/TerraNova">
+      <Router basename="/TerraNova/">
         <ScrollToTop />
         <Navbar />
         <div className="flex flex-col min-h-screen">
