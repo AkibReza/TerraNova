@@ -1,12 +1,15 @@
-// filepath: real-estate-project/src/components/pages/Careers.jsx
 import React from 'react';
+import PageTemplate from './PageTemplate';
 
 const Careers = () => {
   return (
-    <div>
-      <h1>Careers</h1>
-      <p>Join our team and help us shape the future of real estate!</p>
-    </div>
+    <PageTemplate title="Careers">
+      <div className="prose max-w-none">
+        <p className="text-lg text-gray-700">
+          Join our growing team at TerraNova. Career opportunities will be listed here soon.
+        </p>
+      </div>
+    </PageTemplate>
   );
 };
 

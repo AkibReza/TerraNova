@@ -1,12 +1,15 @@
-// filepath: real-estate-project/src/components/pages/PrivacyPolicy.jsx
 import React from 'react';
+import PageTemplate from './PageTemplate';
 
 const PrivacyPolicy = () => {
   return (
-    <div>
-      <h1>Privacy Policy</h1>
-      <p>This page outlines our privacy policy.</p>
-    </div>
+    <PageTemplate title="Privacy Policy">
+      <div className="prose max-w-none">
+        <p className="text-lg text-gray-700">
+          Our privacy policy details will be available soon.
+        </p>
+      </div>
+    </PageTemplate>
   );
 };
 

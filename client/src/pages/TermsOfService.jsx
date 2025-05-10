@@ -1,13 +1,15 @@
-// filepath: real-estate-project/src/components/pages/TermsOfService.jsx
 import React from 'react';
+import PageTemplate from './PageTemplate';
 
 const TermsOfService = () => {
   return (
-    <div>
-      <h1>Terms of Service</h1>
-      <p>This page outlines the terms of service for using our website.</p>
-      {/* Additional content can be added here */}
-    </div>
+    <PageTemplate title="Terms of Service">
+      <div className="prose max-w-none">
+        <p className="text-lg text-gray-700">
+          Our terms of service details will be available soon.
+        </p>
+      </div>
+    </PageTemplate>
   );
 };
 

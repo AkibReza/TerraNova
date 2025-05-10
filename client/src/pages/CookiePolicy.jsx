@@ -1,12 +1,15 @@
-// filepath: real-estate-project/src/components/pages/CookiePolicy.jsx
 import React from 'react';
+import PageTemplate from './PageTemplate';
 
 const CookiePolicy = () => {
   return (
-    <div>
-      <h1>Cookie Policy</h1>
-      <p>This is the Cookie Policy page.</p>
-    </div>
+    <PageTemplate title="Cookie Policy">
+      <div className="prose max-w-none">
+        <p className="text-lg text-gray-700">
+          Our cookie policy details will be available soon.
+        </p>
+      </div>
+    </PageTemplate>
   );
 };
 
