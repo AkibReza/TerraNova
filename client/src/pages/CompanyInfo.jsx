@@ -88,11 +88,7 @@ const CompanyInfo = () => {
       description: "Innovative digital marketing strategies to maximize property visibility and engagement",
       icon: <Star className="h-10 w-10 text-blue-500" />
     },
-    {
-      title: "Virtual Tours",
-      description: "Cutting-edge virtual tour technology allowing clients to explore properties remotely",
-      icon: <Users className="h-10 w-10 text-blue-500" />
-    },
+    
     {
       title: "Market Analysis",
       description: "Comprehensive market research and analysis to ensure optimal investment decisions",
@@ -156,11 +152,6 @@ const CompanyInfo = () => {
                   Founded with a vision to revolutionize property searching, we combine technological innovation with real estate expertise to 
                   create a seamless experience for buyers, sellers, and agents.
                 </p>
-                <p className="text-base text-gray-700 leading-relaxed mt-4">
-                  Our platform leverages cutting-edge web technologies to provide intuitive property searches, detailed listings, 
-                  and valuable market insights. We're committed to transparency, quality service, and helping our users make informed decisions
-                  in their real estate journey.
-                </p>
                 
                 <div className="mt-6 bg-gradient-to-r from-blue-600 to-blue-800 p-6 rounded-xl text-white">
                   <p className="text-lg font-medium italic m-0">
@@ -169,33 +160,79 @@ const CompanyInfo = () => {
                 </div>
               </motion.div>
 
-              {/* Our Specialties */}
+              {/* Our Team Overview */}
               <motion.div 
                 whileHover={{ y: -5 }}
-                className="col-span-2 bg-gradient-to-br from-white to-blue-50 p-8 rounded-2xl shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300"
+                className="prose max-w-none bg-gradient-to-br from-white to-blue-50 p-8 rounded-2xl shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300"
               >
-                <div className="flex items-center space-x-3 mb-8">
-                  <Star className="h-8 w-8 text-blue-600" />
-                  <h3 className="text-2xl font-bold text-blue-800 m-0">Our Specialties</h3>
+                <div className="flex items-center space-x-3 mb-6">
+                  <Users className="h-8 w-8 text-blue-600" />
+                  <h3 className="text-2xl font-bold text-blue-800 m-0">Our Team</h3>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {specialties.map((specialty, index) => (
-                    <motion.div 
-                      key={index} 
-                      whileHover={{ scale: 1.02 }}
-                      className="bg-white p-6 rounded-xl border border-blue-100 shadow-sm hover:shadow-md transition-all duration-300"
-                    >
-                      <div className="flex items-start space-x-4">
-                        <div className="bg-blue-100 p-3 rounded-lg">
-                          {specialty.icon}
-                        </div>
-                        <div>
-                          <h5 className="text-xl font-semibold text-blue-800 mb-2">{specialty.title}</h5>
-                          <p className="text-gray-600 leading-relaxed">{specialty.description}</p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
+                <p className="text-base text-gray-700 leading-relaxed">
+                  Our diverse team consists of talented students specializing in different areas of technology:
+                </p>
+                <ul className="list-none p-0">
+                  <li className="flex items-center space-x-2 mb-2">
+                    <ChevronRight className="h-4 w-4 text-blue-500" />
+                    <span>Full-stack Development</span>
+                  </li>
+                  <li className="flex items-center space-x-2 mb-2">
+                    <ChevronRight className="h-4 w-4 text-blue-500" />
+                    <span>UI/UX Design</span>
+                  </li>
+                  <li className="flex items-center space-x-2 mb-2">
+                    <ChevronRight className="h-4 w-4 text-blue-500" />
+                    <span>Machine Learning</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <ChevronRight className="h-4 w-4 text-blue-500" />
+                    <span>Database Engineering</span>
+                  </li>
+                </ul>
+                
+                <div className="mt-6 bg-blue-50 p-4 rounded-xl">
+                  <p className="text-sm text-blue-800 m-0">
+                    All team members are third-year Computer Science & Engineering students at UITS
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Our Mission */}
+              <motion.div 
+                whileHover={{ y: -5 }}
+                className="prose max-w-none bg-gradient-to-br from-white to-blue-50 p-8 rounded-2xl shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300"
+              >
+                <div className="flex items-center space-x-3 mb-6">
+                  <Target className="h-8 w-8 text-blue-600" />
+                  <h3 className="text-2xl font-bold text-blue-800 m-0">Our Mission</h3>
+                </div>
+                <p className="text-base text-gray-700 leading-relaxed">
+                  We're committed to revolutionizing the real estate industry through:
+                </p>
+                <ul className="list-none p-0">
+                  <li className="flex items-center space-x-2 mb-2">
+                    <ChevronRight className="h-4 w-4 text-blue-500" />
+                    <span>Innovative Technology Solutions</span>
+                  </li>
+                  <li className="flex items-center space-x-2 mb-2">
+                    <ChevronRight className="h-4 w-4 text-blue-500" />
+                    <span>User-Centric Design</span>
+                  </li>
+                  <li className="flex items-center space-x-2 mb-2">
+                    <ChevronRight className="h-4 w-4 text-blue-500" />
+                    <span>Data-Driven Insights</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <ChevronRight className="h-4 w-4 text-blue-500" />
+                    <span>Seamless User Experience</span>
+                  </li>
+                </ul>
+                
+                <div className="mt-6 bg-gradient-to-r from-blue-600 to-blue-800 p-6 rounded-xl text-white">
+                  <p className="text-lg font-medium italic m-0">
+                    "Making property search smarter and easier for everyone"
+                  </p>
                 </div>
               </motion.div>
             </div>
