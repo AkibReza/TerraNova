@@ -20,23 +20,23 @@ const Footer = () => {
           </div>
           <div className="mt-6 md:mt-0">
             <div className="flex justify-center md:justify-end space-x-6">
-              <a href="#" className="text-gray-500 hover:text-blue-600">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600" aria-label="Visit our Facebook page">
                 <Facebook size={24} />
                 <span className="sr-only">Facebook</span>
               </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600" aria-label="Visit our Twitter page">
                 <Twitter size={24} />
                 <span className="sr-only">Twitter</span>
               </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600" aria-label="Visit our Instagram page">
                 <Instagram size={24} />
                 <span className="sr-only">Instagram</span>
               </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600" aria-label="Visit our LinkedIn page">
                 <Linkedin size={24} />
                 <span className="sr-only">LinkedIn</span>
               </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600">
+              <a href="mailto:contact@terranova.com" className="text-gray-500 hover:text-blue-600" aria-label="Send us an email">
                 <Mail size={24} />
                 <span className="sr-only">Email</span>
               </a>
@@ -83,7 +83,7 @@ const Footer = () => {
             <ul className="mt-4 space-y-4">
               <li>
                 <Link
-                  to="/about-us"
+                  to="/company#about-us"
                   className="text-base text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   About Us
@@ -91,7 +91,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/our-team"
+                  to="/company#our-team"
                   className="text-base text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   Our Team
@@ -99,7 +99,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/careers"
+                  to="/company#careers"
                   className="text-base text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   Careers

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
+import { motion } from "framer-motion";
 import {
   BarChart,
   TrendingUp,
@@ -15,6 +16,20 @@ import {
   ArrowDown,
   ChevronDown,
 } from "lucide-react";
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 },
+};
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
 const InsightsAnalytics = () => {
   const [timeRange, setTimeRange] = useState("month");
@@ -40,7 +55,6 @@ const InsightsAnalytics = () => {
           recommendationsChange: 21.4,
         },
         marketTrends: [
-
           { month: "Jan", price: 80 },
           { month: "Feb", price: 85 },
           { month: "Mar", price: 82 },
@@ -155,25 +169,33 @@ const InsightsAnalytics = () => {
           .tickFormat((d) => `৳${d}L`)
       );
 
-      // Add the line
+      // Add the animated line
       svg
         .append("path")
         .datum(data.marketTrends)
         .attr("fill", "none")
         .attr("stroke", "#3B82F6")
         .attr("stroke-width", 3)
-        .attr("d", line);
+        .attr("d", line)
+        .style("opacity", 0)
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
 
-      // Add dots
+      // Add animated dots
       svg
-        .selectAll("dot")
+        .selectAll("circle")
         .data(data.marketTrends)
         .enter()
         .append("circle")
         .attr("cx", (d) => x(d.month) + x.bandwidth() / 2)
         .attr("cy", (d) => y(d.price))
-        .attr("r", 5)
-        .attr("fill", "#3B82F6");
+        .attr("r", 0)
+        .attr("fill", "#3B82F6")
+        .transition()
+        .delay((d, i) => i * 100)
+        .duration(500)
+        .attr("r", 5);
 
       // Add grid lines
       svg
@@ -232,18 +254,22 @@ const InsightsAnalytics = () => {
         .call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(""))
         .attr("stroke-opacity", 0.1);
 
-      // Add bars
+      // Add animated bars
       svg
-        .selectAll("bars")
+        .selectAll("rect")
         .data(data.priceDistribution)
         .enter()
         .append("rect")
         .attr("x", (d) => x(d.range))
-        .attr("y", (d) => y(d.count))
         .attr("width", x.bandwidth())
-        .attr("height", (d) => height - y(d.count))
+        .attr("y", height)
+        .attr("height", 0)
         .attr("fill", "#3B82F6")
-        .attr("rx", 4);
+        .attr("rx", 4)
+        .transition()
+        .duration(1000)
+        .attr("y", (d) => y(d.count))
+        .attr("height", (d) => height - y(d.count));
     }
   };
 
@@ -398,9 +424,14 @@ const InsightsAnalytics = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-12">
-      {/* Header */}
-      <div className="bg-white shadow">
+    <div className="bg-gray-50 min-h-screen pb-12 pt-16">
+      {/* Header with fade in animation */}
+      <motion.div
+        className="bg-white shadow"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="container mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-800">
             Market Insights & Analytics
@@ -409,10 +440,15 @@ const InsightsAnalytics = () => {
             Track market trends and analyze your property preferences
           </p>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Time Range Filter */}
-      <div className="container mx-auto px-4 py-6">
+      {/* Time Range Filter with slide in animation */}
+      <motion.div
+        className="container mx-auto px-4 py-6"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <Calendar size={20} className="text-blue-600 mr-2" />
@@ -451,17 +487,27 @@ const InsightsAnalytics = () => {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {loading ? (
         <div className="container mx-auto px-4 flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
       ) : (
-        <div className="container mx-auto px-4">
-          {/* Summary Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-md p-6">
+        <motion.div
+          className="container mx-auto px-4"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
+          {/* Summary Stats with stagger animation */}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+          >
+            <motion.div variants={fadeInUp} className="bg-white rounded-xl shadow-md p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-gray-500 text-sm">Properties Viewed</p>
@@ -492,9 +538,9 @@ const InsightsAnalytics = () => {
                   style={{ width: "65%" }}
                 ></div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <motion.div variants={fadeInUp} className="bg-white rounded-xl shadow-md p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-gray-500 text-sm">Favorites Added</p>
@@ -525,9 +571,9 @@ const InsightsAnalytics = () => {
                   style={{ width: "40%" }}
                 ></div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <motion.div variants={fadeInUp} className="bg-white rounded-xl shadow-md p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-gray-500 text-sm">Searches Made</p>
@@ -558,9 +604,9 @@ const InsightsAnalytics = () => {
                   style={{ width: "80%" }}
                 ></div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <motion.div variants={fadeInUp} className="bg-white rounded-xl shadow-md p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-gray-500 text-sm">
@@ -593,12 +639,16 @@ const InsightsAnalytics = () => {
                   style={{ width: "50%" }}
                 ></div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          {/* Main Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* Market Trends */}
+          {/* Main Charts with fade in animation */}
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             <div className="bg-white rounded-xl shadow-md p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center">
@@ -633,7 +683,6 @@ const InsightsAnalytics = () => {
               </div>
             </div>
 
-            {/* Price Distribution */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center">
@@ -663,11 +712,9 @@ const InsightsAnalytics = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Secondary Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* Popular Features */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center">
@@ -685,7 +732,6 @@ const InsightsAnalytics = () => {
               <div ref={popularFeaturesChartRef} className="w-full h-72"></div>
             </div>
 
-            {/* Search Trends */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center">
@@ -704,7 +750,6 @@ const InsightsAnalytics = () => {
             </div>
           </div>
 
-          {/* Top Neighborhoods */}
           <div className="bg-white rounded-xl shadow-md p-6 mb-8">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
@@ -793,7 +838,6 @@ const InsightsAnalytics = () => {
             </div>
           </div>
 
-          {/* Export Section */}
           <div className="flex justify-between items-center">
             <div className="text-sm text-gray-500">
               Data last updated: April 21, 2025 at 10:30 AM
@@ -809,7 +853,6 @@ const InsightsAnalytics = () => {
             </div>
           </div>
 
-          {/* Custom Insights (Optional section) */}
           <div className="mt-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl shadow-md p-6 text-white">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Personalized Insights</h2>
@@ -851,7 +894,6 @@ const InsightsAnalytics = () => {
             </div>
           </div>
 
-          {/* Compare Markets Section */}
           <div className="mt-8 bg-white rounded-xl shadow-md p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
@@ -908,7 +950,7 @@ const InsightsAnalytics = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

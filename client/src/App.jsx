@@ -11,12 +11,9 @@ import { AuthProvider } from "./contexts/AuthContext";
 import PropertyList from "./components/property/PropertyList";
 import AddProperty from "./components/property/AddProperty";
 import ForSale from "./pages/ForSale";
-import AboutUs from "./pages/AboutUs";
 import Footer from "./components/layout/Footer";
 import ForRent from "./pages/ForRent";
 import NewProjects from "./pages/NewProjects";
-import OurTeam from "./pages/OurTeam";
-import Careers from "./pages/Careers";
 import Guides from "./pages/Guides";
 import Blog from "./pages/Blog";
 import FAQs from "./pages/FAQs";
@@ -25,6 +22,7 @@ import TermsOfService from "./pages/TermsOfService";
 import CookiePolicy from "./pages/CookiePolicy";
 import ScrollToTop from "./components/utils/ScrollToTop";
 import Navbar from "./components/layout/Navbar";
+import CompanyInfo from "./pages/CompanyInfo";
 
 function App() {
   return (
@@ -44,16 +42,14 @@ function App() {
               <Route path="/auth" element={<Auth />} />
               <Route path="/for-sale" element={<ForSale />} />
               <Route path="/for-rent" element={<ForRent />} />
-              <Route path="/about-us" element={<AboutUs />} />
               <Route path="/blog" element={<Blog />} />
-              <Route path="/careers" element={<Careers />} />
               <Route path="/cookie-policy" element={<CookiePolicy />} />
               <Route path="/faqs" element={<FAQs />} />
               <Route path="/guides" element={<Guides />} />
               <Route path="/new-projects" element={<NewProjects />} />
-              <Route path="/our-team" element={<OurTeam />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/company" element={<CompanyInfo />} />
               <Route path="*" element={<div>Page not found</div>} />
             </Routes>
           </main>

@@ -123,7 +123,7 @@ const AddProperty = () => {
 
   return (
     <motion.div
-      className="max-w-4xl mx-auto mt-10 mb-20"
+      className="max-w-4xl mx-auto mt-20 mb-20" // Changed from mt-10 to mt-20
       variants={containerVariants}
       initial="initial"
       animate="animate"

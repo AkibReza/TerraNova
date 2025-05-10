@@ -38,7 +38,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-12">
+    <div className="bg-gray-50 min-h-screen pb-12 pt-16">
       {/* Header */}
       <div className="bg-white shadow">
         <div className="container mx-auto px-4 py-6">
