@@ -10,26 +10,26 @@ import Auth from "./pages/Auth";
 import { AuthProvider } from "./contexts/AuthContext";
 import PropertyList from "./components/property/PropertyList";
 import AddProperty from "./components/property/AddProperty";
-import ForSale from "./components/pages/ForSale";
-import AboutUs from "./components/pages/AboutUs";
+import ForSale from "./pages/ForSale";
+import AboutUs from "./pages/AboutUs";
 import Footer from "./components/layout/Footer";
-import ForRent from "./components/pages/ForRent";
-import NewProjects from "./components/pages/NewProjects";
-import OurTeam from "./components/pages/OurTeam";
-import Careers from "./components/pages/Careers";
-import Guides from "./components/pages/Guides";
-import Blog from "./components/pages/Blog";
-import FAQs from "./components/pages/FAQs";
-import PrivacyPolicy from "./components/pages/PrivacyPolicy";
-import TermsOfService from "./components/pages/TermsOfService";
-import CookiePolicy from "./components/pages/CookiePolicy";
+import ForRent from "./pages/ForRent";
+import NewProjects from "./pages/NewProjects";
+import OurTeam from "./pages/OurTeam";
+import Careers from "./pages/Careers";
+import Guides from "./pages/Guides";
+import Blog from "./pages/Blog";
+import FAQs from "./pages/FAQs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import CookiePolicy from "./pages/CookiePolicy";
 import ScrollToTop from "./components/utils/ScrollToTop";
 import Navbar from "./components/layout/Navbar";
 
 function App() {
   return (
     <AuthProvider>
-      <Router basename="/TerraNova">
+      <Router basename="/TerraNova/">
         <ScrollToTop />
         <Navbar />
         <div className="flex flex-col min-h-screen">
