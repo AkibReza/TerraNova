@@ -248,26 +248,296 @@ const PropertyForRent = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 via-white to-blue-50 min-h-screen">
-      <div className="container mx-auto px-4 py-8">
-        <motion.h1 
-          className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 text-transparent bg-clip-text text-center mb-2 mt-16"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-        >
-          PROPERTY FOR RENT
-        </motion.h1>
-        
-        <motion.p
-          className="text-gray-600 text-center mb-12 max-w-2xl mx-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.7 }}
-        >
-          Find your perfect rental home with flexible terms and great amenities
-        </motion.p>
-        
+    <div className="min-h-screen">
+      {/* Header with background image and buildings */}
+      <div className="bg-blue-100 relative overflow-hidden">
+        <div className="container mx-auto px-4 pt-16 pb-32">
+          <motion.h1 
+            className="text-4xl font-bold text-blue-700 text-center mb-4"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            PROPERTY FOR RENT
+          </motion.h1>
+          
+          <motion.p
+            className="text-blue-700 text-center mb-12 max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.7 }}
+          >
+            Find your perfect rental home with flexible terms and great amenities
+          </motion.p>
+          
+          {/* Building silhouettes with animations */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
+            <motion.svg 
+              width="400" 
+              height="120" 
+              viewBox="0 0 400 120" 
+              fill="none" 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.7 }}
+            >
+              {/* Building 1 */}
+              <motion.g
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.6 }}
+              >
+                <rect x="70" y="20" width="40" height="100" fill="#3B6FCB" />
+                <motion.rect 
+                  x="75" y="30" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 1.0 }}
+                />
+                <motion.rect 
+                  x="95" y="30" width="10" height="10" 
+                  fill="white" opacity="0.7" 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+                />
+                <motion.rect 
+                  x="75" y="50" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 2.0 }}
+                />
+                <motion.rect 
+                  x="95" y="50" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 2.5 }}
+                />
+                <motion.rect 
+                  x="75" y="70" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 3.0 }}
+                />
+                <motion.rect 
+                  x="95" y="70" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 3, repeat: Infinity, delay: 3.5 }}
+                />
+              </motion.g>
+              
+              {/* Building 2 */}
+              <motion.g
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.7 }}
+              >
+                <rect x="120" y="40" width="50" height="80" fill="#5D85D6" />
+                <rect x="125" y="50" width="40" height="15" fill="#3B6FCB" />
+                <motion.rect 
+                  x="130" y="75" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 1.2 }}
+                />
+                <motion.rect 
+                  x="150" y="75" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 2.2 }}
+                />
+                <motion.rect 
+                  x="130" y="95" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 1.8 }}
+                />
+                <motion.rect 
+                  x="150" y="95" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 2.8 }}
+                />
+              </motion.g>
+              
+              {/* Building 3 */}
+              <motion.g
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.8 }}
+              >
+                <rect x="180" y="50" width="35" height="70" fill="#7599E0" />
+                <motion.rect 
+                  x="185" y="60" width="8" height="8" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1.0 }}
+                />
+                <motion.rect 
+                  x="202" y="60" width="8" height="8" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
+                />
+                <motion.rect 
+                  x="185" y="75" width="8" height="8" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 2.0 }}
+                />
+                <motion.rect 
+                  x="202" y="75" width="8" height="8" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 2.5 }}
+                />
+              </motion.g>
+              
+              {/* Building 4 */}
+              <motion.g
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.9 }}
+              >
+                <rect x="225" y="10" width="30" height="110" fill="#1C4CAA" />
+                <motion.g
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 2, delay: 1.5 }}
+                >
+                  <motion.rect 
+                    x="230" y="20" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 0.2, repeatType: "reverse" }}
+                  />
+                  <motion.rect 
+                    x="245" y="20" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 0.4, repeatType: "reverse" }}
+                  />
+                  <motion.rect 
+                    x="230" y="35" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 0.6, repeatType: "reverse" }}
+                  />
+                  <motion.rect 
+                    x="245" y="35" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 0.8, repeatType: "reverse" }}
+                  />
+                  <motion.rect 
+                    x="230" y="50" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1.0, repeatType: "reverse" }}
+                  />
+                  <motion.rect 
+                    x="245" y="50" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1.2, repeatType: "reverse" }}
+                  />
+                  <motion.rect 
+                    x="230" y="65" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1.4, repeatType: "reverse" }}
+                  />
+                  <motion.rect 
+                    x="245" y="65" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1.6, repeatType: "reverse" }}
+                  />
+                  <motion.rect 
+                    x="230" y="80" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1.8, repeatType: "reverse" }}
+                  />
+                  <motion.rect 
+                    x="245" y="80" width="5" height="5" 
+                    fill="white" opacity="0.7"
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 2.0, repeatType: "reverse" }}
+                  />
+                </motion.g>
+              </motion.g>
+              
+              {/* Building 5 */}
+              <motion.g
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.7, delay: 1.0 }}
+              >
+                <rect x="265" y="40" width="55" height="80" fill="#6E90DF" />
+                <motion.rect 
+                  x="275" y="50" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 1.5 }}
+                />
+                <motion.rect 
+                  x="295" y="50" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 2.0 }}
+                />
+                <motion.rect 
+                  x="285" y="70" width="15" height="15" 
+                  fill="#3B6FCB"
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: [0.9, 1, 0.9] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
+                />
+                <motion.rect 
+                  x="275" y="95" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 2.5 }}
+                />
+                <motion.rect 
+                  x="295" y="95" width="10" height="10" 
+                  fill="white" opacity="0.7"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 3.0 }}
+                />
+              </motion.g>
+            </motion.svg>
+          </div>
+          
+          {/* Curved bottom edge */}
+          <div className="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 100H1440V30C1200 60 960 75 720 75C480 75 240 60 0 30V100Z" fill="white" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <div className="container mx-auto px-4 py-8 mt-8">
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="relative w-20 h-20">
