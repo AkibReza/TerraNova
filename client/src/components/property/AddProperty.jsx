@@ -69,8 +69,6 @@ const AddProperty = () => {
     setIsSubmitting(true);
 
     try {
-      const formDataToSend = new FormData();
-
       // Handle amenities array properly
       const amenitiesArray = formData.amenities
         ? formData.amenities.split(",").map((item) => item.trim())
@@ -85,27 +83,53 @@ const AddProperty = () => {
         numberOfBathrooms: Number(formData.numberOfBathrooms),
         amenities: amenitiesArray,
         location: formData.location,
-        latitude: Number(formData.latitude),
-        longitude: Number(formData.longitude),
+        latitude: formData.latitude ? Number(formData.latitude) : null,
+        longitude: formData.longitude ? Number(formData.longitude) : null,
         otherDetails: formData.otherDetails,
         transactionType: formData.transactionType,
       };
 
-      // Append the stringified property data
-      formDataToSend.append("propertyData", JSON.stringify(propertyData));
+      let response;
 
-      // Append the image file if it exists
       if (formData.image) {
-        formDataToSend.append("image", formData.image);
-      }
+        // If we have an image, use FormData approach
+        const formDataToSend = new FormData();
 
-      const response = await fetch(
-        "https://terranova.onrender.com/api/properties",
-        {
-          method: "POST",
-          body: formDataToSend,
-        }
-      );
+        // Append each property field individually rather than as a JSON string
+        Object.keys(propertyData).forEach((key) => {
+          if (key === "amenities") {
+            // For arrays, we can append with the same key multiple times
+            amenitiesArray.forEach((amenity) => {
+              formDataToSend.append("amenities[]", amenity);
+            });
+          } else {
+            formDataToSend.append(key, propertyData[key]);
+          }
+        });
+
+        // Append the image file
+        formDataToSend.append("image", formData.image);
+
+        response = await fetch(
+          "https://terranova.onrender.com/api/properties",
+          {
+            method: "POST",
+            body: formDataToSend,
+          }
+        );
+      } else {
+        // If no image, use JSON approach which might be more reliable
+        response = await fetch(
+          "https://terranova.onrender.com/api/properties",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(propertyData),
+          }
+        );
+      }
 
       if (!response.ok) {
         const errorData = await response.json();
