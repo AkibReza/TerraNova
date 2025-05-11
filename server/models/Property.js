@@ -10,6 +10,11 @@ const propertySchema = new mongoose.Schema({
   location: String,
   otherDetails: String,
   transactionType: String,
+  latitude: Number,
+  longitude: Number,
 });
+
+// Add an index for geospatial queries
+propertySchema.index({ latitude: 1, longitude: 1 });
 
 module.exports = mongoose.model("Property", propertySchema);

@@ -1,13 +1,58 @@
-// Location coordinates for different areas
-const locationCoordinates = {
-  Uttara: { lat: 23.8759, long: 90.3795 },
-  Banani: { lat: 23.7937, long: 90.4066 },
-  Mohakhali: { lat: 23.7778, long: 90.4057 },
-  // Add more locations as needed
-};
+import { API_BASE_URL } from "../config/config";
 
-// Precomputed distance matrix and proximity scores
+// Global storage for coordinates and proximity matrix
+let locationCoordinates = {};
 const locationProximityMatrix = {};
+let isInitialized = false;
+
+// Fetch locations from the database
+async function fetchLocationCoordinates() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/properties/locations`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const locations = await response.json();
+    console.log("Received locations:", locations);
+
+    if (!Array.isArray(locations)) {
+      console.error("Expected array of locations, got:", typeof locations);
+      return false;
+    }
+
+    // Update locationCoordinates
+    locationCoordinates = locations.reduce((acc, loc) => {
+      if (
+        loc &&
+        loc.location &&
+        typeof loc.latitude === "number" &&
+        typeof loc.longitude === "number"
+      ) {
+        acc[loc.location] = {
+          lat: loc.latitude,
+          long: loc.longitude,
+        };
+      }
+      return acc;
+    }, {});
+
+    console.log("Processed coordinates:", locationCoordinates);
+
+    // Only initialize if we have coordinates
+    if (Object.keys(locationCoordinates).length > 0) {
+      initializeProximityMatrix();
+      isInitialized = true;
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("Error fetching location coordinates:", error);
+    locationCoordinates = {}; // Reset to empty object on error
+    return false;
+  }
+}
 
 // Calculate distance between two points using Haversine formula
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -44,6 +89,11 @@ function initializeProximityMatrix() {
       const coord1 = locationCoordinates[loc1];
       const coord2 = locationCoordinates[loc2];
 
+      if (!coord1 || !coord2) {
+        locationProximityMatrix[loc1][loc2] = 0.1; // Missing coordinates
+        return;
+      }
+
       const distance = calculateDistance(
         coord1.lat,
         coord1.long,
@@ -52,7 +102,6 @@ function initializeProximityMatrix() {
       );
 
       // Convert distance to proximity score
-      // These thresholds can be adjusted based on your specific needs
       let proximityScore;
       if (distance <= 2) {
         // Within 2km - Adjacent
@@ -71,40 +120,90 @@ function initializeProximityMatrix() {
       locationProximityMatrix[loc1][loc2] = proximityScore;
     });
   });
+
+  console.log("Proximity matrix initialized:", locationProximityMatrix);
 }
 
 // Get proximity score between two locations
-function getLocationProximityScore(location1, location2) {
-  location1 = location1.trim();
-  location2 = location2.trim();
+async function getLocationProximityScore(location1, location2) {
+  // Ensure the matrix is initialized
+  if (!isInitialized) {
+    const success = await fetchLocationCoordinates();
+    if (!success) {
+      console.warn("Failed to initialize proximity matrix");
+      return 0.1; // Default fallback score
+    }
+  }
 
-  // Case insensitive comparison
-  location1 =
-    Object.keys(locationCoordinates).find(
-      (loc) => loc.toLowerCase() === location1.toLowerCase()
-    ) || location1;
-  location2 =
-    Object.keys(locationCoordinates).find(
-      (loc) => loc.toLowerCase() === location2.toLowerCase()
-    ) || location2;
-
-  // If either location is not in our database, return minimum score
-  if (
-    !locationProximityMatrix[location1] ||
-    !locationProximityMatrix[location1][location2]
-  ) {
+  if (!location1 || !location2) {
+    console.warn("Missing location parameters", { location1, location2 });
     return 0.1;
   }
 
-  return locationProximityMatrix[location1][location2];
+  location1 = location1.trim();
+  location2 = location2.trim();
+
+  console.log(`Calculating proximity for: "${location1}" and "${location2}"`);
+  console.log("Available locations:", Object.keys(locationCoordinates));
+
+  // Case insensitive comparison
+  const loc1 = Object.keys(locationCoordinates).find(
+    (loc) => loc.toLowerCase() === location1.toLowerCase()
+  );
+
+  const loc2 = Object.keys(locationCoordinates).find(
+    (loc) => loc.toLowerCase() === location2.toLowerCase()
+  );
+
+  console.log("Matched locations:", { loc1, loc2 });
+
+  // If either location is not in our database, return minimum score
+  if (
+    !loc1 ||
+    !loc2 ||
+    !locationProximityMatrix[loc1] ||
+    !locationProximityMatrix[loc1][loc2]
+  ) {
+    console.warn("Locations not found in proximity matrix", {
+      location1,
+      location2,
+      loc1,
+      loc2,
+      hasMatrix: loc1 && loc2 ? !!locationProximityMatrix[loc1] : false,
+      hasScore:
+        loc1 && loc2 && locationProximityMatrix[loc1]
+          ? !!locationProximityMatrix[loc1][loc2]
+          : false,
+    });
+    return 0.1;
+  }
+
+  const score = locationProximityMatrix[loc1][loc2];
+  console.log(`Proximity score for ${loc1} and ${loc2}: ${score}`);
+  return score;
+}
+
+// Check initialization status
+function isLocationDataInitialized() {
+  return isInitialized;
+}
+
+// Force refresh of the location data
+async function refreshLocationData() {
+  console.log("Forcing location data refresh");
+  isInitialized = false;
+  return await fetchLocationCoordinates();
 }
 
 // Initialize the proximity matrix when the module loads
-initializeProximityMatrix();
+fetchLocationCoordinates();
 
 export {
   locationCoordinates,
   getLocationProximityScore,
   calculateDistance,
   initializeProximityMatrix,
+  fetchLocationCoordinates,
+  isLocationDataInitialized,
+  refreshLocationData,
 };

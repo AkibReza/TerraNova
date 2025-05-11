@@ -16,6 +16,8 @@ const propertySchema = new mongoose.Schema({
   location: String,
   otherDetails: String,
   transactionType: String,
+  latitude: Number,
+  longitude: Number,
 });
 
 const Property = mongoose.model("Property", propertySchema);
@@ -29,6 +31,8 @@ const propertyData = [
     numberOfBathrooms: 2,
     amenities: ["Swimming Pool", "Gymnasium", "Security", "Parking"],
     location: "Mohakhali",
+    latitude: 23.7778,
+    longitude: 90.4057,
     otherDetails:
       "Luxury apartment with panoramic city views and high-end finishes.",
     transactionType: "Rent",
@@ -41,6 +45,8 @@ const propertyData = [
     numberOfBathrooms: 2,
     amenities: ["Balcony", "Parking", "Elevator", "Security"],
     location: "Banani",
+    latitude: 23.7937,
+    longitude: 90.4066,
     otherDetails: "Modern apartment in a prime location.",
     transactionType: "Rent",
   },
@@ -52,6 +58,8 @@ const propertyData = [
     numberOfBathrooms: 2,
     amenities: ["Parking", "Elevator", "Security"],
     location: "Uttara",
+    latitude: 23.8759,
+    longitude: 90.3795,
     otherDetails: "Cozy apartment, ideal for small families or couples.",
     transactionType: "Rent",
   },

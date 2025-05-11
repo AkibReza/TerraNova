@@ -1,5 +1,9 @@
 import { propertyData } from "../dataset/Dataset";
-import { getLocationProximityScore } from "./locationUtils";
+import {
+  getLocationProximityScore,
+  isLocationDataInitialized,
+  refreshLocationData,
+} from "./locationUtils";
 import { propertyService } from "../services/propertyService";
 
 /**
@@ -8,7 +12,7 @@ import { propertyService } from "../services/propertyService";
  * @param {Object} property - Property from the dataset
  * @returns {number} - Normalized distance score (0-1, where 0 is perfect match)
  */
-function calculateRoomDistanceScore(userPreference, property, ranges) {
+async function calculateRoomDistanceScore(userPreference, property, ranges) {
   console.log("Calculating score for property:", property);
   console.log("User preferences:", userPreference);
   console.log("Ranges:", ranges);
@@ -20,11 +24,19 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
 
   // Location scoring with proximity consideration
   if (has("location")) {
-    const proximityScore = getLocationProximityScore(
+    // Ensure location data is ready
+    if (!isLocationDataInitialized()) {
+      console.log("Location data not initialized, refreshing...");
+      await refreshLocationData();
+    }
+
+    const proximityScore = await getLocationProximityScore(
       userPreference.location,
       property.location
     );
-    console.log("Location proximity score:", proximityScore);
+    console.log(
+      `Location proximity score for ${property.location}: ${proximityScore}`
+    );
     totalDistance += 1 - proximityScore;
     featuresConsidered++;
   }
@@ -37,8 +49,8 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
         : userPreference.price;
 
     const propertyPrice =
-      typeof property.price === "object"
-        ? property.price.$numberInt
+      typeof property.price === "object" && property.price.$numberInt
+        ? parseInt(property.price.$numberInt, 10)
         : property.price;
 
     const diff = Math.abs(userPrice - propertyPrice);
@@ -71,8 +83,9 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
   if (has("propertySize") || has("size")) {
     const userSize = userPreference.propertySize ?? userPreference.size;
     const propertySize =
-      typeof property.propertySize === "object"
-        ? parseInt(property.propertySize.$numberInt)
+      typeof property.propertySize === "object" &&
+      property.propertySize.$numberInt
+        ? parseInt(property.propertySize.$numberInt, 10)
         : property.propertySize;
 
     const diff = Math.abs(userSize - propertySize);
@@ -85,8 +98,9 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
   // Bedrooms
   if (has("numberOfBedrooms")) {
     const propertyBedrooms =
-      typeof property.numberOfBedrooms === "object"
-        ? parseInt(property.numberOfBedrooms.$numberInt)
+      typeof property.numberOfBedrooms === "object" &&
+      property.numberOfBedrooms.$numberInt
+        ? parseInt(property.numberOfBedrooms.$numberInt, 10)
         : property.numberOfBedrooms;
 
     const diff = Math.abs(userPreference.numberOfBedrooms - propertyBedrooms);
@@ -104,8 +118,9 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
   // Bathrooms
   if (has("numberOfBathrooms")) {
     const propertyBathrooms =
-      typeof property.numberOfBathrooms === "object"
-        ? parseInt(property.numberOfBathrooms.$numberInt)
+      typeof property.numberOfBathrooms === "object" &&
+      property.numberOfBathrooms.$numberInt
+        ? parseInt(property.numberOfBathrooms.$numberInt, 10)
         : property.numberOfBathrooms;
 
     const diff = Math.abs(userPreference.numberOfBathrooms - propertyBathrooms);
@@ -138,9 +153,11 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
     const userAmen = new Set(
       userPreference.amenities.map((a) => a.toLowerCase())
     );
-    const propAmen = new Set(property.amenities.map((a) => a.toLowerCase()));
+    const propAmen = new Set(
+      (property.amenities || []).map((a) => a.toLowerCase())
+    );
     const matchCount = [...userAmen].filter((x) => propAmen.has(x)).length;
-    const score = matchCount / userAmen.size;
+    const score = userAmen.size > 0 ? matchCount / userAmen.size : 1;
     console.log("Amenities comparison:", {
       userAmenities: [...userAmen],
       propertyAmenities: [...propAmen],
@@ -161,12 +178,33 @@ function calculateRoomDistanceScore(userPreference, property, ranges) {
 /**
  * Find the k nearest neighbors (properties) to the user's preferences
  */
-function findKNearestNeighbors(userPreference, properties, k = 5) {
+async function findKNearestNeighbors(userPreference, properties, k = 5) {
   // Calculate feature ranges
-  const prices = properties.map((p) => p.price);
-  const sizes = properties.map((p) => p.propertySize);
-  const bedrooms = properties.map((p) => p.numberOfBedrooms);
-  const bathrooms = properties.map((p) => p.numberOfBathrooms);
+  const prices = properties.map((p) => {
+    return typeof p.price === "object" && p.price.$numberInt
+      ? parseInt(p.price.$numberInt, 10)
+      : p.price;
+  });
+
+  const sizes = properties.map((p) => {
+    return typeof p.propertySize === "object" && p.propertySize.$numberInt
+      ? parseInt(p.propertySize.$numberInt, 10)
+      : p.propertySize;
+  });
+
+  const bedrooms = properties.map((p) => {
+    return typeof p.numberOfBedrooms === "object" &&
+      p.numberOfBedrooms.$numberInt
+      ? parseInt(p.numberOfBedrooms.$numberInt, 10)
+      : p.numberOfBedrooms;
+  });
+
+  const bathrooms = properties.map((p) => {
+    return typeof p.numberOfBathrooms === "object" &&
+      p.numberOfBathrooms.$numberInt
+      ? parseInt(p.numberOfBathrooms.$numberInt, 10)
+      : p.numberOfBathrooms;
+  });
 
   const ranges = {
     priceRange: Math.max(...prices) - Math.min(...prices),
@@ -175,14 +213,19 @@ function findKNearestNeighbors(userPreference, properties, k = 5) {
     bathroomRange: Math.max(...bathrooms) - Math.min(...bathrooms),
   };
 
-  const withScores = properties.map((property) => ({
+  console.log("Property feature ranges:", ranges);
+
+  // Process properties in parallel with async scoring
+  const withScoresPromises = properties.map(async (property) => ({
     ...property,
-    roomDistanceScore: calculateRoomDistanceScore(
+    roomDistanceScore: await calculateRoomDistanceScore(
       userPreference,
       property,
       ranges
     ),
   }));
+
+  const withScores = await Promise.all(withScoresPromises);
 
   return withScores
     .sort((a, b) => a.roomDistanceScore - b.roomDistanceScore)
@@ -206,6 +249,9 @@ function calculateMatchPercentage(roomDistanceScore) {
  */
 async function getPropertyRecommendations(userPreference) {
   try {
+    // Make sure location data is initialized
+    await refreshLocationData();
+
     // Fetch properties from MongoDB
     const properties = await propertyService.getAllProperties();
     console.log("All properties fetched:", properties.length);
@@ -221,7 +267,7 @@ async function getPropertyRecommendations(userPreference) {
     }
 
     // Find k nearest neighbors
-    const nearestNeighbors = findKNearestNeighbors(
+    const nearestNeighbors = await findKNearestNeighbors(
       userPreference,
       filteredProperties,
       5
@@ -229,29 +275,31 @@ async function getPropertyRecommendations(userPreference) {
     console.log("Nearest neighbors found:", nearestNeighbors.length);
 
     // Calculate match percentages and add location context
-    const recommendations = nearestNeighbors.map((property) => {
-      let locationContext = "";
-      if (userPreference.location && property.location) {
-        const proximityScore = getLocationProximityScore(
-          userPreference.location,
-          property.location
+    const recommendations = await Promise.all(
+      nearestNeighbors.map(async (property) => {
+        let locationContext = "";
+        if (userPreference.location && property.location) {
+          const proximityScore = await getLocationProximityScore(
+            userPreference.location,
+            property.location
+          );
+          locationContext = getLocationDescription(proximityScore);
+        }
+
+        const matchPercentage = calculateMatchPercentage(
+          property.roomDistanceScore
         );
-        locationContext = getLocationDescription(proximityScore);
-      }
 
-      const matchPercentage = calculateMatchPercentage(
-        property.roomDistanceScore
-      );
+        // Debug the property and its match percentage
+        console.log(`Property ${property._id}: ${matchPercentage}% match`);
 
-      // Debug the property and its match percentage
-      console.log(`Property ${property._id}: ${matchPercentage}% match`);
-
-      return {
-        ...property,
-        matchPercentage,
-        locationContext,
-      };
-    });
+        return {
+          ...property,
+          matchPercentage,
+          locationContext,
+        };
+      })
+    );
 
     console.log(
       "Final recommendations with match percentages:",
@@ -268,6 +316,7 @@ async function getPropertyRecommendations(userPreference) {
     throw error;
   }
 }
+
 // Helper function to get human-readable location context
 function getLocationDescription(proximityScore) {
   if (proximityScore === 1.0) return "Exact location match";
