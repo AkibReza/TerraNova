@@ -12,6 +12,7 @@ const propertySchema = new mongoose.Schema({
   transactionType: String,
   latitude: Number,
   longitude: Number,
+  imageUrl: String,
 });
 
 // Add an index for geospatial queries

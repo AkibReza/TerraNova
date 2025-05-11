@@ -26,7 +26,10 @@ const AddProperty = () => {
     longitude: "",
     otherDetails: "",
     transactionType: "",
+    image: null,
   });
+
+  const [imagePreview, setImagePreview] = useState(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -44,42 +47,81 @@ const AddProperty = () => {
     "Cottage",
   ];
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({
+        ...formData,
+        image: file,
+      });
+
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Convert amenities string to array
-    const processedData = {
-      ...formData,
-      amenities: formData.amenities.split(",").map((item) => item.trim()),
-      price: Number(formData.price),
-      propertySize: Number(formData.propertySize),
-      numberOfBedrooms: Number(formData.numberOfBedrooms),
-      numberOfBathrooms: Number(formData.numberOfBathrooms),
-    };
-
     try {
+      const formDataToSend = new FormData();
+
+      // Handle amenities array properly
+      const amenitiesArray = formData.amenities
+        ? formData.amenities.split(",").map((item) => item.trim())
+        : [];
+
+      // Create a property object
+      const propertyData = {
+        price: Number(formData.price),
+        propertyType: formData.propertyType,
+        propertySize: Number(formData.propertySize),
+        numberOfBedrooms: Number(formData.numberOfBedrooms),
+        numberOfBathrooms: Number(formData.numberOfBathrooms),
+        amenities: amenitiesArray,
+        location: formData.location,
+        latitude: Number(formData.latitude),
+        longitude: Number(formData.longitude),
+        otherDetails: formData.otherDetails,
+        transactionType: formData.transactionType,
+      };
+
+      // Append the stringified property data
+      formDataToSend.append("propertyData", JSON.stringify(propertyData));
+
+      // Append the image file if it exists
+      if (formData.image) {
+        formDataToSend.append("image", formData.image);
+      }
+
       const response = await fetch(
         "https://terranova.onrender.com/api/properties",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(processedData),
+          body: formDataToSend,
         }
       );
 
-      if (response.ok) {
-        setIsSubmitting(false);
-        // Show success notification
-        showNotification("Property added successfully!", "success");
-        navigate("/TerraNova/propertyList");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to add property");
       }
+
+      const result = await response.json();
+      console.log("Success:", result);
+
+      setIsSubmitting(false);
+      showNotification("Property added successfully!", "success");
+      navigate("/TerraNova/propertyList");
     } catch (error) {
       console.error("Error adding property:", error);
       setIsSubmitting(false);
-      showNotification("Failed to add property", "error");
+      showNotification(error.message || "Failed to add property", "error");
     }
   };
 
@@ -340,6 +382,32 @@ const AddProperty = () => {
                   className="pl-4 pr-4 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Provide detailed information about the property..."
                 />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <label className="flex items-center text-gray-700 mb-2">
+                  <PlusCircle size={18} className="mr-2 text-blue-600" />
+                  <span>Property Image</span>
+                </label>
+                <div className="mt-1 flex items-center space-x-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  {imagePreview && (
+                    <div className="w-24 h-24 relative">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

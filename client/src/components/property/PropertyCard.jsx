@@ -56,9 +56,20 @@ const PropertyCard = ({ property }) => {
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300"
     >
+      {" "}
       <div className="relative">
-        <div className="w-full h-48 bg-gradient-to-r from-blue-100 to-blue-200 flex items-center justify-center">
-          <div className="text-blue-800 font-semibold">Property Image</div>
+        <div className="w-full h-48 overflow-hidden">
+          {property.imageUrl ? (
+            <img
+              src={property.imageUrl}
+              alt={`${property.propertyType} in ${property.location}`}
+              className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-r from-blue-100 to-blue-200 flex items-center justify-center">
+              <div className="text-blue-800 font-semibold">Property Image</div>
+            </div>
+          )}
         </div>
         <div className="absolute top-3 right-3 bg-blue-600 text-white font-bold py-1 px-3 rounded-full text-sm">
           {typeof property.matchPercentage === "number"
@@ -67,7 +78,6 @@ const PropertyCard = ({ property }) => {
           % Match
         </div>
       </div>
-
       <div className="p-5 h-fit">
         <h3 className="text-xl font-bold text-gray-800 mb-2">
           {property.propertyType} in {property.location}
