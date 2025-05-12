@@ -415,20 +415,58 @@ const AddProperty = () => {
                   <PlusCircle size={18} className="mr-2 text-blue-600" />
                   <span>Property Image</span>
                 </label>
-                <div className="mt-1 flex items-center space-x-4">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="py-2 px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                  {imagePreview && (
-                    <div className="w-24 h-24 relative">
+                <div className="mt-1">
+                  {!imagePreview ? (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8">
+                      <div className="text-center">
+                        <PlusCircle
+                          size={48}
+                          className="mx-auto text-gray-400 mb-4"
+                        />
+                        <div className="text-gray-600 mb-4">
+                          Drag and drop your image here, or
+                        </div>
+                        <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                          Browse Files
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden">
                       <img
                         src={imagePreview}
                         alt="Preview"
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover"
                       />
+                      <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="space-x-4">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setImagePreview(null);
+                              setFormData({ ...formData, image: null });
+                            }}
+                            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                          >
+                            Remove
+                          </button>
+                          <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            Change
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageChange}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>

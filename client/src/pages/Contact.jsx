@@ -65,11 +65,14 @@ const Contact = () => {
                     <MapPin size={20} className="text-blue-600" />
                   </div>
                   <div className="ml-4">
-                    <h3 className="font-medium text-gray-800">Our Office</h3>
+                    <h3 className="font-medium text-gray-800">
+                      Our University
+                    </h3>
                     <p className="text-gray-600 mt-1">
-                      123 Real Estate Ave, Suite 500
+                      University Of Information Technology & Sciences
                       <br />
-                      Metro City, CA 90210
+                      H-190, Rd-5, Block J, Baridhara, Maddha Nayanagar, Vatara,
+                      Dhaka 1212
                     </p>
                   </div>
                 </div>
@@ -80,8 +83,8 @@ const Contact = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="font-medium text-gray-800">Phone</h3>
-                    <p className="text-gray-600 mt-1">(555) 123-4567</p>
-                    <p className="text-gray-600">(555) 765-4321</p>
+                    <p className="text-gray-600 mt-1">+880 1644-343728</p>
+                    <p className="text-gray-600">+880 1792-495685</p>
                   </div>
                 </div>
 
@@ -91,8 +94,8 @@ const Contact = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="font-medium text-gray-800">Email</h3>
-                    <p className="text-gray-600 mt-1">info@realestate.com</p>
-                    <p className="text-gray-600">support@realestate.com</p>
+                    <p className="text-gray-600 mt-1">akib.reza23@gmail.com</p>
+                    <p className="text-gray-600">moumitamehtab@gmail.com</p>
                   </div>
                 </div>
 
@@ -322,14 +325,15 @@ const Contact = () => {
 
             <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden">
               <div className="h-80 w-full bg-gray-300">
-                {/* This would be replaced with an actual map */}
-                <div className="w-full h-full flex items-center justify-center text-gray-500">
-                  <p className="text-center">
-                    Map Integration Would Go Here
-                    <br />
-                    (Google Maps, Mapbox, etc.)
-                  </p>
-                </div>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.483216305468!2d90.42360667605233!3d23.80141018681479!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c7bba6ffeb31%3A0xdb02a491b63b8494!2sUniversity%20of%20Information%20Technology%20and%20Sciences%20(UITS)!5e0!3m2!1sen!2sbd!4v1747073022081!5m2!1sen!2sbd"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
               </div>
             </div>
           </div>

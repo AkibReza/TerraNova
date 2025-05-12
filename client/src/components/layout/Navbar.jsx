@@ -16,6 +16,7 @@ const Navbar = () => {
     { name: "Best Offers", path: "/best-offers" },
     { name: "Your Favorites", path: "/favorites" },
     { name: "Contact Us", path: "/contact" },
+    { name: "About Us", path: "/company" },
     { name: "Add Property", path: "/add-property" },
   ];
 
